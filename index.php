@@ -325,23 +325,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                         </tr>
                     <?php else: ?>
                         <?php foreach ($saved_songs as $song): ?>
-                            <tr class="border-t border-slate-200">
-                                <td class="p-4 font-semibold"><?= $song['title'] ?></td>
+                            <tr class="border-t border-slate-200 cursor-pointer hover:bg-gray-200">
+                                <td class="p-4 font-semibold whitespace-nowrap preview-btn" data-song-content='<?= $song['content'] ?>'><?= $song['title'] ?></td>
                                 <td class="p-4 flex justify-center items-center gap-4">
-                                    <a href="index.php?action=backup_song&file=<?= urlencode($song['filename']) ?>" onclick="return confirm('Anda yakin ingin backup lagu ini?')" class="text-transparent">
+                                    <a href="index.php?action=backup_song&file=<?= urlencode($song['filename']) ?>" class="text-transparent backup-btn whitespace-nowrap">
                                         <i class="fas fa-save mr-1"></i>Backup
                                     </a>
 
-                                    <a href="index.php?action=restore_song&file=<?= urlencode($song['filename']) ?>" onclick="return confirm('PERINGATAN: Lagu ini akan ditimpa dengan versi backup terakhir. Lanjutkan?')" class="text-gray-600 hover:text-orange-500">
+                                    <a href="index.php?action=restore_song&file=<?= urlencode($song['filename']) ?>" onclick="return confirm('PERINGATAN: Lagu ini akan ditimpa dengan versi backup terakhir. Lanjutkan?')" class="text-gray-600 hover:text-orange-500 whitespace-nowrap">
                                         <i class="fas fa-undo mr-1"></i>Restore
                                     </a>
-                                    <button class="preview-btn text-slate-600 hover:text-blue-600 transition-colors" data-song-content='<?= $song['content'] ?>'>
-                                        <i class="fas fa-eye mr-1"></i> Pratinjau
-                                    </button>
-                                    <a href="creator.php?file=<?= urlencode($song['filename']) ?>" class="text-slate-600 hover:text-green-600 transition-colors">
+                                    <a href="creator.php?file=<?= urlencode($song['filename']) ?>" class="text-slate-600 hover:text-green-600 transition-colors whitespace-nowrap">
                                         <i class="fas fa-edit mr-1"></i> Edit
                                     </a>
-                                    <button class="delete-btn text-slate-600 hover:text-red-600 transition-colors" data-filename="<?= urlencode($song['filename']) ?>" data-title="<?= $song['title'] ?>">
+                                    <button class="delete-btn text-slate-600 hover:text-red-600 transition-colors whitespace-nowrap" data-filename="<?= urlencode($song['filename']) ?>" data-title="<?= $song['title'] ?>">
                                         <i class="fas fa-trash-alt mr-1"></i> Hapus
                                     </button>
                                 </td>
@@ -385,7 +382,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             const showRestoreModalBtn = document.getElementById('show-restore-modal-btn');
             const restoreModal = document.getElementById('restore-modal');
             const cancelRestoreBtn = document.getElementById('cancel-restore-btn');
+            const backupButtons = document.querySelectorAll('.backup-btn');
+            const DOUBLE_CLICK_THRESHOLD = 400;
 
+            backupButtons.forEach(button => {
+                // Gunakan 'lastClick' sebagai penanda waktu klik terakhir untuk setiap tombol
+                button.dataset.lastClick = 0;
+
+                button.addEventListener('click', function(event) {
+                    const currentTime = new Date().getTime();
+                    const lastClickTime = parseInt(button.dataset.lastClick);
+
+                    // Cek selisih waktu antara klik sekarang dan klik terakhir
+                    if (currentTime - lastClickTime < DOUBLE_CLICK_THRESHOLD) {
+                        // INI ADALAH DOUBLE-CLICK!
+                        // Biarkan aksi default (pindah halaman) berjalan.
+                        // Reset waktu klik agar urutan dimulai lagi.
+                        button.dataset.lastClick = 0;
+                        // Anda bisa tambahkan konfirmasi final di sini jika mau
+                        if (!confirm('Konfirmasi backup untuk lagu ini?')) {
+                            event.preventDefault(); // Batalkan jika pengguna menekan "Cancel"
+                        }
+                    } else {
+                        // INI ADALAH KLIK PERTAMA (ATAU KLIK YANG TERLALU LAMBAT)
+                        // 1. Cegah aksi default link agar tidak pindah halaman
+                        event.preventDefault();
+
+                        // 2. Simpan waktu klik saat ini pada tombol
+                        button.dataset.lastClick = currentTime;
+
+                        // 3. Beri feedback visual kepada pengguna (opsional tapi sangat disarankan)
+                        const originalHTML = button.innerHTML;
+                        button.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i>Klik lagi!';
+
+                        // 4. Kembalikan teks tombol ke semula setelah beberapa saat
+                        setTimeout(() => {
+                            // Hanya kembalikan jika belum ada klik kedua
+                            if (parseInt(button.dataset.lastClick) !== 0) {
+                                button.innerHTML = originalHTML;
+                                button.dataset.lastClick = 0; // Reset
+                            }
+                        }, 1500); // Reset setelah 1.5 detik
+                    }
+                });
+            });
 
             // Modal Controller
             showRestoreModalBtn.addEventListener('click', () => {
