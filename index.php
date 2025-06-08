@@ -207,13 +207,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         .line-preview {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 1rem;
+            gap: 2px;
+            margin-bottom: 0.1px;
             font-family: 'Courier New', Courier, monospace;
         }
 
         .slot-preview {
-            background-color: #e9e9e9;
+            /*background-color: #e9e9e9;*/
             border-radius: 4px;
             padding: 5px 8px;
             text-align: center;
@@ -230,7 +230,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             display: block;
             font-size: 0.85em;
             color: #555;
-            margin-top: 2px;
+            margin-top: -2px;
         }
 
         /* Style untuk transisi dan mode fullscreen modal */

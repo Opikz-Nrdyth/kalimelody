@@ -115,7 +115,7 @@ $all_songs_data = get_all_songs_data();
         }
 
         .slot-preview {
-            background-color: #eef2ff;
+            /*background-color: #eef2ff;*/
             border-radius: 4px;
             padding: 4px 6px;
             text-align: center;
