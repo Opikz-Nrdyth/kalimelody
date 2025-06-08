@@ -48,6 +48,125 @@ function get_saved_tabs()
 }
 
 $saved_songs = get_saved_tabs();
+
+function handle_song_backup($fileName)
+{
+    $safeFileName = basename($fileName);
+    $tabsDir = 'tabs';
+    $backupsDir = 'backups';
+    $sourceFile = $tabsDir . '/' . $safeFileName;
+
+    if (!file_exists($sourceFile)) {
+        header('Location: index.php?status=backup_failed&reason=file_not_found');
+        exit;
+    }
+
+    // Buat direktori backup khusus untuk lagu ini jika belum ada
+    $songBackupDir = $backupsDir . '/' . $safeFileName;
+    if (!is_dir($songBackupDir)) {
+        mkdir($songBackupDir, 0777, true);
+    }
+
+    // Buat nama file backup dengan timestamp
+    $backupFileName = 'backup_' . date('Y-m-d_H-i-s') . '.json';
+    $destinationFile = $songBackupDir . '/' . $backupFileName;
+
+    if (copy($sourceFile, $destinationFile)) {
+        header('Location: index.php');
+        exit;
+    } else {
+        header('Location: index.php?status=backup_failed&reason=copy_failed');
+        exit;
+    }
+}
+
+// --- FUNGSI UNTUK MENANGANI RESTORE PER LAGU ---
+function handle_song_restore($fileName)
+{
+    $safeFileName = basename($fileName);
+    $tabsDir = 'tabs';
+    $backupsDir = 'backups';
+    $targetFile = $tabsDir . '/' . $safeFileName;
+    $songBackupDir = $backupsDir . '/' . $safeFileName;
+
+    if (!is_dir($songBackupDir)) {
+        header('Location: index.php?status=restore_failed&reason=no_backups_for_this_song');
+        exit;
+    }
+
+    // Cari file backup terbaru di dalam folder backup lagu ini
+    $allBackups = scandir($songBackupDir, SCANDIR_SORT_DESCENDING);
+    $latestBackupFile = '';
+    foreach ($allBackups as $backup) {
+        if ($backup !== '.' && $backup !== '..') {
+            $latestBackupFile = $backup;
+            break;
+        }
+    }
+
+    if (empty($latestBackupFile)) {
+        header('Location: index.php?status=restore_failed&reason=no_backups_found');
+        exit;
+    }
+
+    $restoreSource = $songBackupDir . '/' . $latestBackupFile;
+
+    // (Opsional tapi direkomendasikan) Buat backup mikro sebelum menimpa
+    copy($targetFile, $songBackupDir . '/before_restore_' . date('Y-m-d_H-i-s') . '.json');
+
+    // Timpa file asli dengan file dari backup
+    if (copy($restoreSource, $targetFile)) {
+        return true; // Kembalikan true jika berhasil
+    } else {
+        return false; // Kembalikan false jika gagal
+    }
+}
+
+function get_restorable_songs()
+{
+    $tabsDir = 'tabs';
+    $backupsDir = 'backups';
+
+    if (!is_dir($backupsDir)) {
+        return [];
+    }
+
+    // 1. Dapatkan semua nama file yang ada di folder /tabs
+    $current_files_paths = glob($tabsDir . '/*.json');
+    $current_files = array_map('basename', $current_files_paths);
+
+    // 2. Dapatkan semua nama folder backup per-lagu
+    $backup_dirs_paths = glob($backupsDir . '/*', GLOB_ONLYDIR);
+    $backup_dirs = array_map('basename', $backup_dirs_paths);
+
+    // 3. Cari perbedaannya: folder backup yang tidak memiliki file di /tabs
+    $restorable_files = array_diff($backup_dirs, $current_files);
+
+    return $restorable_files;
+}
+
+// --- CONTROLLER UTAMA UNTUK MENANGANI AKSI ---
+if (isset($_GET['action']) && isset($_GET['file'])) {
+    $file = $_GET['file'];
+    if ($_GET['action'] === 'backup_song') {
+        handle_song_backup($file);
+    }
+    if ($_GET['action'] === 'restore_song') {
+        handle_song_restore($file);
+    }
+}
+
+// Penanganan aksi POST dari modal restore
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    if ($_POST['action'] === 'restore_selected' && isset($_POST['songs_to_restore']) && is_array($_POST['songs_to_restore'])) {
+        $restored_count = 0;
+        foreach ($_POST['songs_to_restore'] as $file_to_restore) {
+            handle_song_restore($file_to_restore);
+        }
+        header('Location: index.php?status=restore_selected_success');
+        exit;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -137,7 +256,10 @@ $saved_songs = get_saved_tabs();
                 <i class="fa-solid fa-list-music text-blue-500 mr-3"></i>
                 Daftar Lagu
             </h1>
-            <div class="flex gap-2">
+            <div class="flex gap-2 flex-wrap">
+                <button id="show-restore-modal-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg shadow-md">
+                    <i class="fas fa-trash-restore mr-2"></i>Restore
+                </button>
                 <a href="album.php" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-5 rounded-lg shadow-md transition-transform transform hover:scale-105">
                     <i class="fas fa-book-open mr-2"></i>Lihat Album
                 </a>
@@ -147,7 +269,46 @@ $saved_songs = get_saved_tabs();
             </div>
         </header>
 
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div id="restore-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 hidden">
+            <div class="bg-white rounded-lg shadow-xl max-w-lg w-full">
+                <h3 class="text-xl font-bold p-5 border-b">Restore Lagu dari Backup</h3>
+
+                <form action="index.php" method="POST">
+                    <input type="hidden" name="action" value="restore_selected">
+
+                    <div id="restorable-songs-list" class="p-6 max-h-80 overflow-y-auto">
+
+                        <?php
+                        $restorable_songs = get_restorable_songs();
+                        if (empty($restorable_songs)) {
+                            echo '<p class="text-gray-500">Tidak ada lagu yang bisa direstore saat ini.</p>';
+                        } else {
+                            foreach ($restorable_songs as $song_file) {
+                                // Ambil judul dari nama file untuk ditampilkan
+                                $title_from_file = str_replace(['tab_', '.json'], '', $song_file);
+                                $title_from_file = str_replace('_', ' ', $title_from_file);
+                                // Potong timestamp jika ada
+                                $title_display = preg_replace('/_\d+$/', '', $title_from_file);
+
+                                echo '<label class="flex items-center space-x-3 mb-2">';
+                                echo '<input type="checkbox" name="songs_to_restore[]" value="' . htmlspecialchars($song_file) . '" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">';
+                                echo '<span>' . htmlspecialchars(ucwords($title_display)) . '</span>';
+                                echo '</label>';
+                            }
+                        }
+                        ?>
+
+                    </div>
+
+                    <div class="flex justify-end p-4 border-t bg-slate-50 gap-3">
+                        <button type="button" id="cancel-restore-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg">Batal</button>
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Restore Lagu Terpilih</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md overflow-x-auto">
             <table id="song-list-table" class="w-full">
                 <thead class="bg-slate-100 text-left text-slate-600">
                     <tr>
@@ -167,6 +328,13 @@ $saved_songs = get_saved_tabs();
                             <tr class="border-t border-slate-200">
                                 <td class="p-4 font-semibold"><?= $song['title'] ?></td>
                                 <td class="p-4 flex justify-center items-center gap-4">
+                                    <a href="index.php?action=backup_song&file=<?= urlencode($song['filename']) ?>" onclick="return confirm('Anda yakin ingin backup lagu ini?')" class="text-transparent hover:text-green-600 opacity-10">
+                                        <i class="fas fa-save mr-1"></i>Backup
+                                    </a>
+
+                                    <a href="index.php?action=restore_song&file=<?= urlencode($song['filename']) ?>" onclick="return confirm('PERINGATAN: Lagu ini akan ditimpa dengan versi backup terakhir. Lanjutkan?')" class="text-gray-600 hover:text-orange-500">
+                                        <i class="fas fa-undo mr-1"></i>Restore
+                                    </a>
                                     <button class="preview-btn text-slate-600 hover:text-blue-600 transition-colors" data-song-content='<?= $song['content'] ?>'>
                                         <i class="fas fa-eye mr-1"></i> Pratinjau
                                     </button>
@@ -214,6 +382,23 @@ $saved_songs = get_saved_tabs();
             const notification = document.getElementById('notification');
             // Tombol fullscreen baru
             const modalFullscreenBtn = document.getElementById('modal-fullscreen-btn');
+            const showRestoreModalBtn = document.getElementById('show-restore-modal-btn');
+            const restoreModal = document.getElementById('restore-modal');
+            const cancelRestoreBtn = document.getElementById('cancel-restore-btn');
+
+
+            // Modal Controller
+            showRestoreModalBtn.addEventListener('click', () => {
+                restoreModal.classList.remove('hidden');
+            });
+            cancelRestoreBtn.addEventListener('click', () => {
+                restoreModal.classList.add('hidden');
+            });
+            restoreModal.addEventListener('click', (e) => {
+                if (e.target === dom.restoreModal) {
+                    restoreModal.classList.add('hidden');
+                }
+            });
 
             // --- EVENT LISTENERS ---
             songListTable.addEventListener('click', async (e) => {

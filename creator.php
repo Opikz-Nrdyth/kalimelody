@@ -207,7 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 notification: document.getElementById('notification'),
             };
 
-            const noteKeys = ["1'", "2'", "3'", "4'", "5'", "6'", "7'", "1''", "2''", "3''", "4''", "5''", "6''", "7''", "1", "2", "3", "4", "5", "6", "7", "~", "(", ")", ".", "-", "Del"];
+            const noteKeys = ["1°", "2°", "3°", "4°", "5°", "6°", "7°", "1°°", "2°°", "3°°", "4°°", "5°°", "6°°", "7°°", "1", "2", "3", "4", "5", "6", "7", "~", "(", ")", ".", "-", "Del"];
             // --- PERUBAHAN 1: Mengganti 'Shift' menjadi 'CapsLock' ---
             const lyricKeys = ['QWERTYUIOP'.split(''), 'ASDFGHJKL'.split(''), ['CL', ...'ZXCVBNM'.split(''), 'Bksp'],
                 ['Space']
