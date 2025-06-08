@@ -208,7 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             display: flex;
             flex-wrap: wrap;
             gap: 2px;
-            margin-bottom: 0.1px;
+            margin-bottom: 10px;
             font-family: 'Courier New', Courier, monospace;
         }
 
