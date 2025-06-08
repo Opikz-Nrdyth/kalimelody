@@ -47,7 +47,7 @@ $all_songs_data = get_all_songs_data();
     <meta name="twitter:title" content="Album - Kalimelody | A Collection of Notes from the Heart">
     <meta name="twitter:description" content="Jelajahi setiap nada dan tulisan dalam album Kalimelody yang menenangkan jiwa.">
     <meta name="twitter:image" content="http://googleusercontent.com/image_generation_content/1">
-    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/images/icon.png" type="image/png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -64,14 +64,6 @@ $all_songs_data = get_all_songs_data();
             background-color: #ffffff;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             border: 1px solid #e2e8f0;
-        }
-
-        .page-footer {
-            text-align: center;
-            margin-top: auto;
-            font-size: 12px;
-            color: #94a3b8;
-            padding-top: 10px;
         }
 
         .toc-title {
@@ -109,7 +101,7 @@ $all_songs_data = get_all_songs_data();
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 24px;
             font-family: 'Courier New', monospace;
         }
 
@@ -133,6 +125,22 @@ $all_songs_data = get_all_songs_data();
             color: #4b5563;
             margin-top: 2px;
         }
+
+        .paper-option {
+            transition: all 0.2s ease-in-out;
+            border: 2px solid #e5e7eb;
+        }
+
+        .paper-option:hover {
+            border-color: #93c5fd;
+            background-color: #eff6ff;
+        }
+
+        .paper-option.selected {
+            border-color: #2563eb;
+            background-color: #dbeafe;
+            transform: scale(1.03);
+        }
     </style>
 </head>
 
@@ -141,9 +149,9 @@ $all_songs_data = get_all_songs_data();
     <div class="w-full max-w-4xl">
         <div class="flex flex-wrap gap-4 justify-between items-center mb-4">
             <a href="index.php" class="text-blue-600 hover:text-blue-800 font-semibold"><i class="fas fa-arrow-left mr-2"></i>Kembali ke Daftar</a>
-            <div class="flex gap-3">
+            <div class="flex items-center gap-3">
                 <button id="filter-btn" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm">
-                    <i class="fas fa-filter mr-2"></i>Filter Lagu
+                    <i class="fas fa-filter mr-2"></i>Filter
                 </button>
                 <button id="export-pdf-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-sm">
                     <i class="fas fa-file-pdf mr-2"></i>Ekspor ke PDF
@@ -180,6 +188,17 @@ $all_songs_data = get_all_songs_data();
         </div>
     </div>
 
+    <div id="paper-size-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-lg w-full">
+            <h3 class="text-xl font-bold p-5 border-b">Pilih Ukuran Kertas Cetak</h3>
+            <div id="paper-options-container" class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            </div>
+            <div class="flex justify-end p-4 border-t bg-slate-50 gap-3">
+                <button id="cancel-export-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg">Batal</button>
+                <button id="continue-export-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Lanjutkan & Ekspor</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         window.onload = function() {
@@ -200,6 +219,92 @@ $all_songs_data = get_all_songs_data();
                 filterModal: document.getElementById('filter-modal'),
                 applyFilterBtn: document.getElementById('apply-filter-btn'),
                 filterCheckboxes: document.getElementById('filter-checkboxes'),
+                paperSizeModal: document.getElementById('paper-size-modal'),
+                paperOptionsContainer: document.getElementById('paper-options-container'),
+                cancelExportBtn: document.getElementById('cancel-export-btn'),
+                continueExportBtn: document.getElementById('continue-export-btn'),
+            };
+
+            const pdfConfigs = {
+                a4: {
+                    name: 'A4',
+                    description: 'Jurnal Besar / Workbook',
+                    margin: 20,
+                    titleSize: 24,
+                    tocTitleSize: 20,
+                    songTitleSize: 18,
+                    noteSize: 10,
+                    lyricSize: 8,
+                    dots: 80,
+                    lineGap: 16,
+                    wrapGap: 12
+                },
+                a5: {
+                    name: 'A5',
+                    description: 'Novel / Buku Tulis',
+                    margin: 15,
+                    titleSize: 20,
+                    tocTitleSize: 16,
+                    songTitleSize: 14,
+                    noteSize: 9,
+                    lyricSize: 7,
+                    dots: 50,
+                    lineGap: 14,
+                    wrapGap: 10
+                },
+                a6: {
+                    name: 'A6',
+                    description: 'Buku Saku / Diary Kecil',
+                    margin: 10,
+                    titleSize: 18,
+                    tocTitleSize: 14,
+                    songTitleSize: 12,
+                    noteSize: 9,
+                    lyricSize: 7,
+                    dots: 40,
+                    lineGap: 14,
+                    wrapGap: 9
+                },
+                b4: {
+                    name: 'B4',
+                    description: 'Majalah Besar / Buku Gambar',
+                    margin: 22,
+                    titleSize: 26,
+                    tocTitleSize: 22,
+                    songTitleSize: 20,
+                    noteSize: 11,
+                    lyricSize: 9,
+                    dots: 90,
+                    lineGap: 18,
+                    wrapGap: 13
+                },
+                b5: {
+                    name: 'B5',
+                    description: 'Buku Jurnal / Catatan',
+                    margin: 18,
+                    titleSize: 22,
+                    tocTitleSize: 18,
+                    songTitleSize: 16,
+                    noteSize: 10,
+                    lyricSize: 8,
+                    dots: 60,
+                    lineGap: 15,
+                    wrapGap: 11
+                },
+                b6: {
+                    name: 'B6',
+                    description: 'Buku Saku / Manga',
+                    margin: 12,
+                    titleSize: 19,
+                    tocTitleSize: 15,
+                    songTitleSize: 13,
+                    noteSize: 9,
+                    lyricSize: 7,
+                    dots: 45,
+                    lineGap: 14,
+                    wrapGap: 10
+                },
+
             };
 
             function setupApplication(songs) {
@@ -244,46 +349,80 @@ $all_songs_data = get_all_songs_data();
 
             function paginateContent(songs) {
                 let pages = [];
-                let pageLinks = {};
-                if (songs.length === 0) return ['<div class="text-center text-slate-500">Tidak ada lagu yang dipilih.</div>'];
+                let pageLinks = {}; // Untuk menyimpan nomor halaman awal setiap lagu
+
+                if (songs.length === 0) {
+                    return ['<div class="text-center text-slate-500">Tidak ada lagu yang dipilih.</div>'];
+                }
+
+                // Halaman pertama selalu untuk Daftar Isi
                 let tocHTML = '<div class="toc-title">Daftar Isi</div>';
                 songs.forEach((song, index) => {
                     tocHTML += `<div class="toc-item" data-song-index="${index}"><span>${song.title || 'Tanpa Judul'}</span><span class="dots"></span><span class="page-placeholder"></span></div>`;
                 });
                 pages.push(tocHTML);
+
+                // Loop untuk setiap lagu, buat satu halaman penuh untuk setiap lagu
                 songs.forEach((song, songIndex) => {
+                    // Catat bahwa lagu ini akan dimulai pada indeks halaman berikutnya
                     pageLinks[songIndex] = pages.length;
-                    let songHTML = `<div class="song-title">${song.title || 'Tanpa Judul'}</div>`;
+
+                    let songPageHTML = `<div class="song-title">${song.title || 'Tanpa Judul'}</div>`;
+
+                    // Gabungkan semua baris notasi dari satu lagu ke dalam satu string HTML
                     song.lines.forEach(line => {
                         let lineHTML = '<div class="line-preview">';
                         line.forEach(slot => {
                             lineHTML += `<div class="slot-preview"><span class="note-preview">${slot.note || '&nbsp;'}</span><span class="lyric-preview">${slot.lyric || '&nbsp;'}</span></div>`;
                         });
                         lineHTML += '</div>';
-                        if ((songHTML + lineHTML).length > 1800) {
-                            pages.push(songHTML);
-                            songHTML = '';
-                        }
-                        songHTML += lineHTML;
+                        songPageHTML += lineHTML;
                     });
-                    pages.push(songHTML);
+
+                    // Setelah semua baris digabungkan, tambahkan sebagai satu halaman baru
+                    pages.push(songPageHTML);
                 });
-                let tocPage = new DOMParser().parseFromString(pages[0], 'text/html');
-                tocPage.querySelectorAll('.toc-item').forEach(item => {
+
+                // Kembali ke halaman Daftar Isi (indeks 0) untuk mengisi nomor halaman yang benar
+                let tocPageParser = new DOMParser().parseFromString(pages[0], 'text/html');
+                tocPageParser.querySelectorAll('.toc-item').forEach(item => {
                     const songIndex = item.dataset.songIndex;
+                    // Nomor halaman untuk manusia dimulai dari 1
                     const pageNum = pageLinks[songIndex] + 1;
                     item.querySelector('.page-placeholder').textContent = pageNum;
                 });
-                pages[0] = tocPage.body.innerHTML;
+                pages[0] = tocPageParser.body.innerHTML;
+
                 return pages;
             }
 
-            // ==========================================================
-            // === FUNGSI EKSPOR PDF DENGAN PERBAIKAN FINAL V2 ===
-            // ==========================================================
-            async function exportAllToPDF() {
+            function populatePaperOptions() {
+                dom.paperOptionsContainer.innerHTML = '';
+                Object.keys(pdfConfigs).forEach((key) => {
+                    const config = pdfConfigs[key];
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'paper-option p-4 rounded-lg cursor-pointer text-center';
+                    optionDiv.dataset.size = key;
+                    if (key === 'a6') {
+                        optionDiv.classList.add('selected');
+                    }
+                    optionDiv.innerHTML = `
+                <div class="font-bold text-lg">${config.name}</div>
+                <div class="text-sm text-gray-500">${config.description}</div>
+            `;
+                    dom.paperOptionsContainer.appendChild(optionDiv);
+                });
+            }
+
+            async function exportAllToPDF(paperSize) {
                 if (filteredSongsData.length === 0) {
                     alert("Silakan pilih setidaknya satu lagu untuk diekspor ke PDF.");
+                    return;
+                }
+
+                const config = pdfConfigs[paperSize];
+                if (!config) {
+                    alert("Ukuran kertas tidak valid.");
                     return;
                 }
 
@@ -293,132 +432,195 @@ $all_songs_data = get_all_songs_data();
                 const doc = new jsPDF({
                     orientation: 'p',
                     unit: 'mm',
-                    format: 'a6'
+                    format: paperSize
                 });
-                const pageMargin = 10;
+
                 const pageHeight = doc.internal.pageSize.getHeight();
                 const pageWidth = doc.internal.pageSize.getWidth();
-                const fileName = (filteredSongsData.length === 1) ?
-                    `${filteredSongsData[0].title || 'lagu'}.pdf` :
-                    'Kalimelody.pdf';
+                // 3. Nama file ekspor diubah
+                const fileName = `Kalimelody_${paperSize.toUpperCase()}.pdf`;
+
+                // --- Helper function untuk menambahkan nomor halaman ---
+                const addPageNumber = (pageNum) => {
+                    // Simpan pengaturan font dan warna saat ini
+                    const lastFont = {
+                        name: doc.getFont().fontName,
+                        style: doc.getFont().fontStyle,
+                        size: doc.getFontSize()
+                    };
+                    const lastColor = doc.getTextColor();
+
+                    // Atur font yang konsisten khusus untuk nomor halaman
+                    doc.setFont("helvetica", "normal")
+                        .setFontSize(8)
+                        .setTextColor(150, 150, 150);
+
+                    const footerText = `Kalimelody | ${pageNum}`;
+                    // Gunakan align: 'right' agar posisi selalu pas di kanan
+                    doc.text(footerText, pageWidth - config.margin, pageHeight - 7, {
+                        align: 'right'
+                    });
+
+                    // Kembalikan pengaturan font dan warna seperti semula agar tidak mengganggu elemen lain
+                    doc.setFont(lastFont.name, lastFont.style)
+                        .setFontSize(lastFont.size)
+                        .setTextColor(lastColor);
+                };
 
                 const renderSongToDoc = (song, yPos) => {
                     let currentY = yPos;
-                    doc.setFont("helvetica", "bold").setFontSize(14).setTextColor(0, 0, 0).text(song.title || 'Tanpa Judul', pageWidth / 2, currentY, {
+                    doc.setFont("helvetica", "bold").setFontSize(config.songTitleSize).setTextColor(0, 0, 0).text(song.title || 'Tanpa Judul', pageWidth / 2, currentY, {
                         align: 'center'
                     });
                     currentY += 10;
                     doc.setFont("courier", "normal");
                     song.lines.forEach(line => {
-                        if (currentY > pageHeight - 15) {
+                        if (currentY > pageHeight - (config.margin + 5)) {
                             doc.addPage();
-                            currentY = pageMargin;
+                            currentY = config.margin;
+                            addPageNumber(doc.internal.getNumberOfPages());
                         }
-                        let currentX = pageMargin;
+                        let currentX = config.margin;
                         line.forEach(slot => {
-                            doc.setFontSize(9);
+                            doc.setFontSize(config.noteSize);
                             const noteWidth = doc.getTextWidth(slot.note);
-                            doc.setFontSize(7);
+                            doc.setFontSize(config.lyricSize);
                             const lyricWidth = doc.getTextWidth(slot.lyric);
-
                             const contentWidth = Math.max(noteWidth, lyricWidth);
-                            const blockPadding = 1; // 1mm padding di setiap sisi blok
+                            const blockPadding = 1;
                             const fullBlockWidth = contentWidth + (blockPadding * 2);
-                            const spaceBetweenBlocks = 1.5; // Jarak antar blok
-
-                            if (currentX + fullBlockWidth > pageWidth - pageMargin) {
-                                currentY += 9;
-                                currentX = pageMargin;
-                                if (currentY > pageHeight - 15) {
+                            const spaceBetweenBlocks = 1.5;
+                            if (currentX + fullBlockWidth > pageWidth - config.margin) {
+                                currentY += config.wrapGap;
+                                currentX = config.margin;
+                                if (currentY > pageHeight - (config.margin + 5)) {
                                     doc.addPage();
-                                    currentY = pageMargin;
+                                    currentY = config.margin;
+                                    addPageNumber(doc.internal.getNumberOfPages());
                                 }
                             }
-
                             if (slot.note.trim() !== '') {
                                 doc.setFillColor(235, 235, 235);
                                 doc.rect(currentX, currentY - 3.5, fullBlockWidth, 7.5, 'F');
                             }
-
                             const noteX = currentX + blockPadding + (contentWidth - noteWidth) / 2;
                             const lyricX = currentX + blockPadding + (contentWidth - lyricWidth) / 2;
-
-                            doc.setFontSize(9).setTextColor(0, 0, 0).text(slot.note, noteX, currentY);
+                            doc.setFontSize(config.noteSize).setTextColor(0, 0, 0).text(slot.note, noteX, currentY);
                             if (slot.lyric.trim()) {
-                                doc.setFontSize(7).setTextColor(80, 80, 80).text(slot.lyric, lyricX, currentY + 3.5);
+                                doc.setFontSize(config.lyricSize).setTextColor(80, 80, 80).text(slot.lyric, lyricX, currentY + 3.5);
                             }
-
                             currentX += fullBlockWidth + spaceBetweenBlocks;
                         });
-                        currentY += 9;
+                        currentY += config.lineGap;
                     });
                     return currentY;
                 };
 
                 if (filteredSongsData.length === 1) {
                     renderSongToDoc(filteredSongsData[0], 20);
+                    addPageNumber(1);
                     doc.save(fileName);
                 } else {
                     const coverImg = new Image();
-                    coverImg.src = 'cover buku.png';
+                    coverImg.src = 'images/cover buku.png';
                     coverImg.onload = function() {
                         doc.addImage(this, 'PNG', 0, 0, pageWidth, pageHeight);
-                        doc.addPage();
+
                         let pageLinks = {};
-                        let currentPageNum = 3;
+                        let currentPageNum = 2;
                         filteredSongsData.forEach((song, index) => {
-                            pageLinks[index] = currentPageNum;
-                            let tempY = pageMargin + 5 + 10;
+                            pageLinks[index] = currentPageNum + 1;
+                            let tempY = config.margin + 5 + 10;
                             song.lines.forEach(line => {
                                 if (tempY > pageHeight - 15) {
                                     currentPageNum++;
-                                    tempY = pageMargin;
+                                    tempY = config.margin;
                                 }
-                                tempY += 9;
+                                tempY += config.lineGap;
                             });
                             currentPageNum++;
                         });
 
+                        doc.addPage();
                         let yPos = 20;
-                        doc.setFontSize(18).text('Album Kalimba', pageWidth / 2, yPos, {
+                        doc.setFont("helvetica", "bold").setFontSize(config.titleSize).text('Album Kalimba', pageWidth / 2, yPos, {
                             align: 'center'
                         });
                         yPos += 12;
-                        doc.setFontSize(14).text('Daftar Isi', pageWidth / 2, yPos, {
+                        doc.setFont("helvetica", "bold").setFontSize(config.tocTitleSize).text('Daftar Isi', pageWidth / 2, yPos, {
                             align: 'center'
                         });
-                        yPos += 12;
-                        doc.setFont("courier", "normal").setFontSize(9);
+                        yPos += 15;
+                        doc.setFont("times", "normal").setFontSize(config.noteSize + 1);
                         filteredSongsData.forEach((song, index) => {
                             if (yPos > pageHeight - 15) {
                                 doc.addPage();
-                                yPos = pageMargin;
+                                addPageNumber(doc.internal.getNumberOfPages());
+                                yPos = config.margin;
                             }
                             const title = song.title || 'Tanpa Judul';
                             const pageNum = pageLinks[index].toString();
-                            const dots = '.'.repeat(Math.max(0, 40 - title.length - pageNum.length));
-                            doc.text(`${title} ${dots} ${pageNum}`, pageMargin, yPos);
-                            yPos += 6;
+
+                            doc.setTextColor(0, 0, 0); // Pastikan warna hitam
+
+                            // Gambar Judul di kiri
+                            doc.text(title, config.margin, yPos);
+
+                            // Gambar Nomor Halaman di kanan
+                            const pageNumWidth = doc.getTextWidth(pageNum);
+                            doc.text(pageNum, pageWidth - config.margin - pageNumWidth, yPos);
+
+                            // Kalkulasi dan gambar titik-titik dinamis di antaranya
+                            const titleWidth = doc.getTextWidth(title);
+                            const dotWidth = doc.getTextWidth('.');
+                            const startX = config.margin + titleWidth + 2; // Mulai titik 2mm setelah judul
+                            const endX = pageWidth - config.margin - pageNumWidth - 2; // Akhiri titik 2mm sebelum nomor halaman
+
+                            if (startX < endX) {
+                                const numDots = Math.floor((endX - startX) / dotWidth);
+                                doc.text('.'.repeat(numDots), startX, yPos);
+                            }
+
+                            yPos += (config.lineGap / 1.5);
                         });
+                        addPageNumber(2);
 
                         filteredSongsData.forEach(song => {
                             doc.addPage();
+                            addPageNumber(doc.internal.getNumberOfPages());
                             renderSongToDoc(song, 20);
                         });
-
                         doc.save(fileName);
                     };
                     coverImg.onerror = function() {
-                        alert('Gagal memuat "cover buku.png". Pastikan file ada di direktori yang sama. PDF akan dibuat tanpa cover.');
+                        alert('Gagal memuat "cover buku.png". PDF akan dibuat tanpa cover.');
                         doc.save(fileName);
                     }
                 }
             }
 
-            dom.prevBtn.addEventListener('click', () => renderPage(currentPageIndex - 1));
-            dom.nextBtn.addEventListener('click', () => renderPage(currentPageIndex + 1));
-            dom.pageNumbersContainer.addEventListener('click', (e) => {
-                if (e.target.matches('.page-num-btn')) renderPage(parseInt(e.target.dataset.page));
+            // --- EVENT LISTENERS ---
+            dom.exportPdfBtn.addEventListener('click', () => {
+                dom.paperSizeModal.classList.remove('hidden');
+            });
+            dom.cancelExportBtn.addEventListener('click', () => {
+                dom.paperSizeModal.classList.add('hidden');
+            });
+            dom.continueExportBtn.addEventListener('click', () => {
+                const selectedOption = dom.paperOptionsContainer.querySelector('.paper-option.selected');
+                if (selectedOption) {
+                    const paperSize = selectedOption.dataset.size;
+                    exportAllToPDF(paperSize);
+                    dom.paperSizeModal.classList.add('hidden');
+                } else {
+                    alert('Silakan pilih ukuran kertas terlebih dahulu.');
+                }
+            });
+            dom.paperOptionsContainer.addEventListener('click', (e) => {
+                const selectedOption = e.target.closest('.paper-option');
+                if (!selectedOption) return;
+                dom.paperOptionsContainer.querySelectorAll('.paper-option').forEach(opt => opt.classList.remove('selected'));
+                selectedOption.classList.add('selected');
             });
             dom.filterBtn.addEventListener('click', () => dom.filterModal.classList.remove('hidden'));
             dom.applyFilterBtn.addEventListener('click', () => {
@@ -430,8 +632,15 @@ $all_songs_data = get_all_songs_data();
             dom.filterModal.addEventListener('click', (e) => {
                 if (e.target === dom.filterModal) dom.filterModal.classList.add('hidden');
             });
-            dom.exportPdfBtn.addEventListener('click', exportAllToPDF);
+            dom.prevBtn.addEventListener('click', () => renderPage(currentPageIndex - 1));
+            dom.nextBtn.addEventListener('click', () => renderPage(currentPageIndex + 1));
+            dom.pageNumbersContainer.addEventListener('click', (e) => {
+                if (e.target.matches('.page-num-btn')) renderPage(parseInt(e.target.dataset.page));
+            });
+
+            // --- INISIALISASI ---
             setupApplication(filteredSongsData);
+            populatePaperOptions();
         };
     </script>
 

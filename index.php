@@ -76,7 +76,7 @@ $saved_songs = get_saved_tabs();
     <meta name="twitter:title" content="Kalimelody - A Collection of Notes from the Heart">
     <meta name="twitter:description" content="Temukan ketenangan jiwa melalui Kalimelody, sebuah koleksi nada dan tulisan dari hati yang menenangkan.">
     <meta name="twitter:image" content="http://googleusercontent.com/image_generation_content/1">
-    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/images/icon.png" type="image/png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -112,6 +112,19 @@ $saved_songs = get_saved_tabs();
             font-size: 0.85em;
             color: #555;
             margin-top: 2px;
+        }
+
+        /* Style untuk transisi dan mode fullscreen modal */
+        #preview-modal .modal-container {
+            transition: all 0.3s ease-in-out;
+        }
+
+        #preview-modal .modal-fullscreen {
+            width: 100vw;
+            height: 100vh;
+            max-width: 100vw;
+            max-height: 100vh;
+            border-radius: 0;
         }
     </style>
 </head>
@@ -173,12 +186,18 @@ $saved_songs = get_saved_tabs();
     </div>
 
     <div id="preview-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-auto">
-            <div class="flex justify-between items-center p-4 border-b">
+        <div class="modal-container bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b flex-shrink-0">
                 <h3 id="modal-title" class="text-2xl font-bold">Pratinjau</h3>
-                <button id="modal-close-btn" class="text-2xl text-slate-500 hover:text-slate-800">&times;</button>
+                <div class="flex items-center gap-4">
+                    <button id="modal-fullscreen-btn" title="Layar Penuh" class="text-lg text-slate-500 hover:text-slate-800">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                    <button id="modal-close-btn" title="Tutup" class="text-2xl text-slate-500 hover:text-slate-800">&times;</button>
+                </div>
             </div>
-            <div id="modal-content" class="p-6 text-sm"></div>
+            <div id="modal-content" class="p-6 text-sm overflow-y-auto">
+            </div>
         </div>
     </div>
 
@@ -193,13 +212,15 @@ $saved_songs = get_saved_tabs();
             const modalCloseBtn = document.getElementById('modal-close-btn');
             const songListTable = document.getElementById('song-list-table');
             const notification = document.getElementById('notification');
+            // Tombol fullscreen baru
+            const modalFullscreenBtn = document.getElementById('modal-fullscreen-btn');
 
-            // --- LOGIKA UNTUK PRATINJAU & HAPUS ---
+            // --- EVENT LISTENERS ---
             songListTable.addEventListener('click', async (e) => {
+                /* ... (fungsi ini tidak berubah) ... */
                 const previewBtn = e.target.closest('.preview-btn');
                 const deleteBtn = e.target.closest('.delete-btn');
 
-                // Jika tombol pratinjau diklik
                 if (previewBtn) {
                     const songDataJSON = previewBtn.dataset.songContent;
                     const songData = JSON.parse(songDataJSON);
@@ -208,33 +229,23 @@ $saved_songs = get_saved_tabs();
                     modal.classList.remove('hidden');
                 }
 
-                // Jika tombol hapus diklik
                 if (deleteBtn) {
                     const title = deleteBtn.dataset.title;
                     const filename = deleteBtn.dataset.filename;
+                    if (!confirm(`Apakah Anda yakin ingin menghapus lagu "${title}"?`)) return;
 
-                    // Tampilkan konfirmasi
-                    if (!confirm(`Apakah Anda yakin ingin menghapus lagu "${title}"? Tindakan ini tidak dapat diurungkan.`)) {
-                        return;
-                    }
-
-                    // Kirim permintaan hapus ke server
                     const formData = new FormData();
                     formData.append('action', 'delete');
                     formData.append('filename', filename);
-
                     try {
                         const response = await fetch('index.php', {
                             method: 'POST',
                             body: formData
                         });
                         const result = await response.json();
-
                         if (response.ok && result.status === 'success') {
                             showNotification(result.message, false);
-                            // Hapus baris dari tabel secara visual
                             deleteBtn.closest('tr').remove();
-                            // Cek jika tabel kosong setelah dihapus
                             if (songListTable.querySelector('tbody tr') === null) {
                                 const tbody = songListTable.querySelector('tbody');
                                 tbody.innerHTML = `<tr id="no-songs-row"><td colspan="2" class="p-8 text-center text-slate-500">Belum ada lagu yang disimpan.</td></tr>`;
@@ -248,8 +259,35 @@ $saved_songs = get_saved_tabs();
                 }
             });
 
+            // Event listener untuk tombol fullscreen
+            modalFullscreenBtn.addEventListener('click', () => {
+                const modalContainer = modal.querySelector('.modal-container');
+                const icon = modalFullscreenBtn.querySelector('i');
+
+                modalContainer.classList.toggle('modal-fullscreen');
+
+                if (modalContainer.classList.contains('modal-fullscreen')) {
+                    icon.classList.remove('fa-expand');
+                    icon.classList.add('fa-compress');
+                    modalFullscreenBtn.title = 'Kembali ke normal';
+                } else {
+                    icon.classList.remove('fa-compress');
+                    icon.classList.add('fa-expand');
+                    modalFullscreenBtn.title = 'Layar Penuh';
+                }
+            });
+
             // --- FUNGSI-FUNGSI HELPER ---
             function closeModal() {
+                // Pastikan keluar dari mode fullscreen saat ditutup
+                const modalContainer = modal.querySelector('.modal-container');
+                const icon = modalFullscreenBtn.querySelector('i');
+                if (modalContainer.classList.contains('modal-fullscreen')) {
+                    modalContainer.classList.remove('modal-fullscreen');
+                    icon.classList.remove('fa-compress');
+                    icon.classList.add('fa-expand');
+                    modalFullscreenBtn.title = 'Layar Penuh';
+                }
                 modal.classList.add('hidden');
             }
             modalCloseBtn.addEventListener('click', closeModal);
@@ -274,6 +312,7 @@ $saved_songs = get_saved_tabs();
             }
 
             function showNotification(message, isError = false) {
+                /* ... (fungsi ini tidak berubah) ... */
                 notification.textContent = message;
                 notification.className = 'fixed top-5 right-5 text-white py-2 px-4 rounded-lg shadow-xl transition-all duration-300 z-50 ' + (isError ? 'bg-red-500' : 'bg-green-500');
                 notification.classList.remove('opacity-0', '-translate-y-10');
