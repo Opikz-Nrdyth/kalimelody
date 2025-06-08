@@ -3,6 +3,7 @@
 > A Collection of Notes from the Heart.
 
 <p align="center">
+  <img src="https://kalimelody.opikstudio.my.id/images/logo.png" alt="Logo Kalimelody" width="75">
   <strong>✨ Coba Live Preview Aplikasinya! ✨</strong>
   <br>
   <a href="https://kalimelody.opikstudio.my.id/">
@@ -37,7 +38,7 @@ Tujuan kami adalah menyediakan alat yang simpel dan indah agar tidak ada lagi "n
 
 <p align="center">
   <a href="https://opikstudio.my.id/">
-    <img src="https://opikstudio.my.id/assets/logo_White-B95f4QTA.png" alt="Logo Opik Studio" width="200">
+    <img src="https://opikstudio.my.id/assets/logo_White-B95f4QTA.png" alt="Logo Opik Studio" width="75">
   </a>
 </p>
 
