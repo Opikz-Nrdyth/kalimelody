@@ -97,6 +97,15 @@ $all_songs_data = get_all_songs_data();
             color: #1e3a8a;
         }
 
+        .song-refrensi {
+            font-size: 11px;
+            font-style: italic;
+            color: #64748b;
+            /* Warna abu-abu */
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
         .line-preview {
             display: flex;
             flex-wrap: wrap;
@@ -259,11 +268,11 @@ $all_songs_data = get_all_songs_data();
                     titleSize: 18,
                     tocTitleSize: 14,
                     songTitleSize: 12,
-                    noteSize: 9,
+                    noteSize: 8,
                     lyricSize: 7,
                     dots: 40,
                     lineGap: 14,
-                    wrapGap: 9
+                    wrapGap: 10
                 },
                 b4: {
                     name: 'B4',
@@ -385,6 +394,10 @@ $all_songs_data = get_all_songs_data();
 
                     // Tambahkan judul ke halaman
                     currentPageHTML += `<div class="song-title">${songTitle}</div>`;
+                    if (song.refrensi && song.refrensi.trim() !== '') {
+                        currentPageHTML += `<div class="song-refrensi">Referensi: ${song.refrensi}</div>`;
+                        linesOnCurrentPage += 1; // Tambah 1 baris untuk tinggi referensi
+                    }
                     linesOnCurrentPage += titleHeight;
 
                     // Loop per baris notasi di dalam lagu
@@ -495,12 +508,24 @@ $all_songs_data = get_all_songs_data();
                     const song = filteredSongsData[0];
                     let y = margin;
                     const songTitle = song.title || 'Tanpa Judul';
+                    const songRefrensi = song.refrensi || ''; // Ambil data referensi
                     const titleHeight = config.songTitleSize / 2;
+
+                    // Tulis Judul
                     doc.setFont("helvetica", "bold").setFontSize(config.songTitleSize).setTextColor(0, 0, 0);
                     doc.text(songTitle, pageWidth / 2, y, {
                         align: 'center'
                     });
-                    y += titleHeight;
+                    y += (titleHeight / 2) + 2; // Beri sedikit jarak
+
+                    // --- TAMBAHKAN BLOK IF INI UNTUK MENCETAK REFERENSI ---
+                    if (songRefrensi.trim() !== '') {
+                        doc.setFont("helvetica", "italic").setFontSize(config.noteSize - 1).setTextColor(100);
+                        doc.text(`Referensi: ${songRefrensi}`, pageWidth / 2, y, {
+                            align: 'center'
+                        });
+                        y += (config.noteSize / 2); // Beri jarak setelah referensi
+                    }
                     song.lines.forEach(line => {
                         const lineHeight = config.lineGap;
                         if (y + lineHeight > pageBottom) {
@@ -582,11 +607,21 @@ $all_songs_data = get_all_songs_data();
                                 title: songTitle,
                                 page: doc.internal.getNumberOfPages()
                             });
+                            const songRefrensi = song.refrensi || '';
                             doc.setFont("helvetica", "bold").setFontSize(config.songTitleSize).setTextColor(0, 0, 0);
                             doc.text(songTitle, pageWidth / 2, y, {
                                 align: 'center'
                             });
-                            y += titleHeight;
+                            y += (titleHeight / 2) + 2;
+
+                            // --- TAMBAHKAN BLOK IF INI UNTUK MENCETAK REFERENSI ---
+                            if (songRefrensi.trim() !== '') {
+                                doc.setFont("helvetica", "italic").setFontSize(config.noteSize - 1).setTextColor(100);
+                                doc.text(`Referensi: ${songRefrensi}`, pageWidth / 2, y, {
+                                    align: 'center'
+                                });
+                                y += (config.noteSize / 2);
+                            }
                             song.lines.forEach(line => {
                                 const lineHeight = config.lineGap;
                                 if (y + lineHeight > pageBottom) {

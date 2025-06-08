@@ -2,7 +2,7 @@
 // BAGIAN LOGIKA PHP (BACKEND) - TIDAK ADA PERUBAHAN DI SINI
 
 // --- LOGIKA UNTUK MEMUAT DATA SAAT EDIT (GET REQUEST) ---
-$initial_data_json = '{"title":"","lines":[[{"note":"","lyric":""}]]}';
+$initial_data_json = '{"title":"","refrensi":"","lines":[[{"note":"","lyric":""}]]}';
 if (isset($_GET['file'])) {
     $file_to_load = basename($_GET['file']);
     $file_path = 'tabs/' . $file_to_load;
@@ -158,6 +158,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="title" class="block text-sm font-medium text-slate-600 mb-1">Judul Lagu</label>
             <input type="text" id="title" placeholder="Masukkan judul lagu di sini..." class="w-full p-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
         </div>
+        <div class="mb-6">
+            <label for="refrensi" class="block text-sm font-medium text-slate-600 mb-1">Refrensi Tabs</label>
+            <input type="text" id="refrensi" placeholder="Masukkan refrensi tabs di sini..." class="w-full p-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
         <div id="notation-container" class="grid bg-white p-4 rounded-lg shadow-inner border border-slate-200 mb-6 min-h-[150px] w-full">
             <div id="lines-container" class="overflow-x-auto pb-4"></div>
             <div class="flex gap-2 items-center mt-4 ">
@@ -194,6 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             const dom = {
                 title: document.getElementById('title'),
+                refrensi: document.getElementById('refrensi'),
                 linesContainer: document.getElementById('lines-container'),
                 addLineBtn: document.getElementById('add-line-btn'),
                 keyboardContainer: document.getElementById('virtual-keyboard-container'),
@@ -219,6 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             function renderApp() {
                 dom.title.value = tabData.title;
+                dom.refrensi.value = tabData.refrensi;
                 renderNotationGrid();
                 updatePreview();
             }
@@ -285,17 +291,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             function updatePreview() {
                 // ... (fungsi ini tidak berubah, biarkan seperti aslinya) ...
                 function centerText(text, width) {
+                    if (!text) return ' '.repeat(width); // Handle jika teks null atau undefined
                     if (text.length >= width) return text;
                     const paddingTotal = width - text.length;
                     const paddingLeft = Math.floor(paddingTotal / 2);
                     const paddingRight = Math.ceil(paddingTotal / 2);
                     return ' '.repeat(paddingLeft) + text + ' '.repeat(paddingRight);
                 }
-                let previewText = `${tabData.title}\n`;
+                let previewText = `${tabData.title || 'Tanpa Judul'}\n`;
+                if (tabData.refrensi && tabData.refrensi.trim() !== '') {
+                    previewText += `Referensi: ${tabData.refrensi}\n`;
+                }
                 previewText += '-'.repeat(tabData.title.length > 0 ? tabData.title.length : 10) + '\n\n';
+
                 tabData.lines.forEach(line => {
                     const slotsWithWidth = line.map(s => {
-                        const width = Math.max(s.note.length, s.lyric.length);
+                        const width = Math.max((s.note || '').length, (s.lyric || '').length);
                         return {
                             note: centerText(s.note, width),
                             lyric: centerText(s.lyric, width)
@@ -381,6 +392,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 tabData.title = e.target.value;
                 updatePreview();
             });
+
+            dom.refrensi.addEventListener('input', (e) => {
+                tabData.refrensi = e.target.value;
+                updatePreview();
+            });
+
             dom.linesContainer.addEventListener('focusin', (e) => {
                 if (e.target.matches('.note-input, .lyric-input')) {
                     activeInput = e.target;

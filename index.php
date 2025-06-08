@@ -353,7 +353,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     <div id="preview-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
         <div class="modal-container bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] flex flex-col">
             <div class="flex justify-between items-center p-4 border-b flex-shrink-0">
-                <h3 id="modal-title" class="text-2xl font-bold">Pratinjau</h3>
+                <div class="flex flex-col items-start gap-1">
+                    <h3 id="modal-title" class="text-2xl font-bold">Pratinjau</h3>
+                    <a href="" id="modal-refrensi" class="font-bold hidden text-blue-600"><i class="fa-solid fa-arrow-up-right-from-square"></i> Refrensi</a>
+                </div>
                 <div class="flex items-center gap-4">
                     <button id="modal-fullscreen-btn" title="Layar Penuh" class="text-lg text-slate-500 hover:text-slate-800">
                         <i class="fas fa-expand"></i>
@@ -373,6 +376,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         document.addEventListener('DOMContentLoaded', () => {
             const modal = document.getElementById('preview-modal');
             const modalTitle = document.getElementById('modal-title');
+            const modalRefrensi = document.getElementById('modal-refrensi');
             const modalContent = document.getElementById('modal-content');
             const modalCloseBtn = document.getElementById('modal-close-btn');
             const songListTable = document.getElementById('song-list-table');
@@ -450,6 +454,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     const songDataJSON = previewBtn.dataset.songContent;
                     const songData = JSON.parse(songDataJSON);
                     modalTitle.textContent = songData.title || 'Pratinjau';
+                    if (!songData.refrensi) {
+                        modalRefrensi.classList.add("hidden")
+                    } else {
+                        modalRefrensi.classList.remove("hidden")
+                    }
+                    modalRefrensi.setAttribute("href", songData.refrensi || "")
                     modalContent.innerHTML = formatPreviewHTML(songData);
                     modal.classList.remove('hidden');
                 }
