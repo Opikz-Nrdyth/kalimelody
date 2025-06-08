@@ -328,7 +328,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                             <tr class="border-t border-slate-200">
                                 <td class="p-4 font-semibold"><?= $song['title'] ?></td>
                                 <td class="p-4 flex justify-center items-center gap-4">
-                                    <a href="index.php?action=backup_song&file=<?= urlencode($song['filename']) ?>" onclick="return confirm('Anda yakin ingin backup lagu ini?')" class="text-transparent hover:text-green-600 opacity-10">
+                                    <a href="index.php?action=backup_song&file=<?= urlencode($song['filename']) ?>" onclick="return confirm('Anda yakin ingin backup lagu ini?')" class="text-transparent">
                                         <i class="fas fa-save mr-1"></i>Backup
                                     </a>
 
