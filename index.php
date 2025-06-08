@@ -355,7 +355,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             <div class="flex justify-between items-center p-4 border-b flex-shrink-0">
                 <div class="flex flex-col items-start gap-1">
                     <h3 id="modal-title" class="text-2xl font-bold">Pratinjau</h3>
-                    <a href="" id="modal-refrensi" class="font-bold hidden text-blue-600"><i class="fa-solid fa-arrow-up-right-from-square"></i> Refrensi</a>
+                    <a href="" target="_blank" id="modal-refrensi" class="font-bold hidden text-blue-600"><i class="fa-solid fa-arrow-up-right-from-square"></i> Refrensi</a>
                 </div>
                 <div class="flex items-center gap-4">
                     <button id="modal-fullscreen-btn" title="Layar Penuh" class="text-lg text-slate-500 hover:text-slate-800">
