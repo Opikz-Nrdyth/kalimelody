@@ -347,7 +347,9 @@ $all_songs_data = get_all_songs_data();
                 }
             }
 
+            // GANTI DENGAN FUNGSI BARU INI
             function paginateContent(songs) {
+                const LINES_PER_PAGE = 10; // Tentukan perkiraan jumlah baris per halaman, bisa disesuaikan
                 let pages = [];
                 let pageLinks = {}; // Untuk menyimpan nomor halaman awal setiap lagu
 
@@ -355,40 +357,75 @@ $all_songs_data = get_all_songs_data();
                     return ['<div class="text-center text-slate-500">Tidak ada lagu yang dipilih.</div>'];
                 }
 
-                // Halaman pertama selalu untuk Daftar Isi
+                // --- Langkah 1: Buat Halaman Daftar Isi (ToC) dulu ---
                 let tocHTML = '<div class="toc-title">Daftar Isi</div>';
                 songs.forEach((song, index) => {
                     tocHTML += `<div class="toc-item" data-song-index="${index}"><span>${song.title || 'Tanpa Judul'}</span><span class="dots"></span><span class="page-placeholder"></span></div>`;
                 });
                 pages.push(tocHTML);
 
-                // Loop untuk setiap lagu, buat satu halaman penuh untuk setiap lagu
+                // --- Langkah 2: Buat Halaman Konten dengan Pagination ---
+                let currentPageHTML = '';
+                let linesOnCurrentPage = 0;
+
                 songs.forEach((song, songIndex) => {
-                    // Catat bahwa lagu ini akan dimulai pada indeks halaman berikutnya
+                    const songTitle = song.title || 'Tanpa Judul';
+                    const titleHeight = 3; // Anggap judul memakan tinggi 3 baris
+                    let isFirstPartOfSong = true;
+
+                    // Cek apakah judul saja sudah membuat halaman baru
+                    if (linesOnCurrentPage > 0 && linesOnCurrentPage + titleHeight > LINES_PER_PAGE) {
+                        pages.push(currentPageHTML); // Simpan halaman sebelumnya
+                        currentPageHTML = ''; // Mulai halaman baru
+                        linesOnCurrentPage = 0;
+                    }
+
+                    // Catat halaman awal lagu ini
                     pageLinks[songIndex] = pages.length;
 
-                    let songPageHTML = `<div class="song-title">${song.title || 'Tanpa Judul'}</div>`;
+                    // Tambahkan judul ke halaman
+                    currentPageHTML += `<div class="song-title">${songTitle}</div>`;
+                    linesOnCurrentPage += titleHeight;
 
-                    // Gabungkan semua baris notasi dari satu lagu ke dalam satu string HTML
+                    // Loop per baris notasi di dalam lagu
                     song.lines.forEach(line => {
+                        const lineIsEmpty = line.every(slot => !slot.note && !slot.lyric);
+                        if (lineIsEmpty) return; // Lewati baris kosong
+
+                        const lineHeight = 2; // Anggap satu baris notasi memakan tinggi 2 baris
+
+                        // Cek apakah baris ini muat di halaman saat ini
+                        if (linesOnCurrentPage > 0 && linesOnCurrentPage + lineHeight > LINES_PER_PAGE) {
+                            pages.push(currentPageHTML); // Simpan halaman saat ini
+                            currentPageHTML = ''; // Mulai halaman baru
+                            linesOnCurrentPage = 0;
+                            // Baris yang menulis ulang judul "(Lanjutan)" sudah dihapus.
+                        }
+
+                        // Render baris notasi ke HTML
                         let lineHTML = '<div class="line-preview">';
                         line.forEach(slot => {
                             lineHTML += `<div class="slot-preview"><span class="note-preview">${slot.note || '&nbsp;'}</span><span class="lyric-preview">${slot.lyric || '&nbsp;'}</span></div>`;
                         });
                         lineHTML += '</div>';
-                        songPageHTML += lineHTML;
+                        currentPageHTML += lineHTML;
+                        linesOnCurrentPage += lineHeight;
                     });
 
-                    // Setelah semua baris digabungkan, tambahkan sebagai satu halaman baru
-                    pages.push(songPageHTML);
+                    // Beri jarak setelah lagu selesai, dan mulai halaman baru jika perlu
+                    linesOnCurrentPage += 2; // Jarak antar lagu
                 });
 
-                // Kembali ke halaman Daftar Isi (indeks 0) untuk mengisi nomor halaman yang benar
+                // Masukkan halaman terakhir yang belum tersimpan
+                if (currentPageHTML.trim() !== '') {
+                    pages.push(currentPageHTML);
+                }
+
+                // --- Langkah 3: Isi Nomor Halaman di Daftar Isi ---
                 let tocPageParser = new DOMParser().parseFromString(pages[0], 'text/html');
                 tocPageParser.querySelectorAll('.toc-item').forEach(item => {
                     const songIndex = item.dataset.songIndex;
-                    // Nomor halaman untuk manusia dimulai dari 1
-                    const pageNum = pageLinks[songIndex] + 1;
+                    const pageNum = pageLinks[songIndex] + 1; // Nomor halaman dimulai dari 1
                     item.querySelector('.page-placeholder').textContent = pageNum;
                 });
                 pages[0] = tocPageParser.body.innerHTML;
@@ -414,9 +451,10 @@ $all_songs_data = get_all_songs_data();
                 });
             }
 
+            // GANTI DENGAN FUNGSI BARU INI
             async function exportAllToPDF(paperSize) {
                 if (filteredSongsData.length === 0) {
-                    alert("Silakan pilih setidaknya satu lagu untuk diekspor ke PDF.");
+                    alert("Silakan pilih setidaknya satu lagu untuk diekspor.");
                     return;
                 }
 
@@ -434,169 +472,155 @@ $all_songs_data = get_all_songs_data();
                     unit: 'mm',
                     format: paperSize
                 });
-
                 const pageHeight = doc.internal.pageSize.getHeight();
                 const pageWidth = doc.internal.pageSize.getWidth();
-                // 3. Nama file ekspor diubah
-                const fileName = `Kalimelody_${paperSize.toUpperCase()}.pdf`;
+                const margin = config.margin;
+                const pageBottom = pageHeight - margin;
 
-                // --- Helper function untuk menambahkan nomor halaman ---
-                const addPageNumber = (pageNum) => {
-                    // Simpan pengaturan font dan warna saat ini
-                    const lastFont = {
-                        name: doc.getFont().fontName,
-                        style: doc.getFont().fontStyle,
-                        size: doc.getFontSize()
-                    };
-                    const lastColor = doc.getTextColor();
+                const addPageNumbers = (doc) => {
+                    const totalPages = doc.internal.getNumberOfPages();
+                    for (let i = 1; i <= totalPages; i++) {
+                        doc.setPage(i);
+                        doc.setFontSize(8).setTextColor(150, 150, 150);
+                        const text = `Kalimelody | ${i}`;
 
-                    // Atur font yang konsisten khusus untuk nomor halaman
-                    doc.setFont("helvetica", "normal")
-                        .setFontSize(8)
-                        .setTextColor(150, 150, 150);
-
-                    const footerText = `Kalimelody | ${pageNum}`;
-                    // Gunakan align: 'right' agar posisi selalu pas di kanan
-                    doc.text(footerText, pageWidth - config.margin, pageHeight - 7, {
-                        align: 'right'
-                    });
-
-                    // Kembalikan pengaturan font dan warna seperti semula agar tidak mengganggu elemen lain
-                    doc.setFont(lastFont.name, lastFont.style)
-                        .setFontSize(lastFont.size)
-                        .setTextColor(lastColor);
+                        // --- PERUBAHAN DI BARIS INI ---
+                        // Kita gunakan koordinat X di ujung kanan margin dan tambahkan opsi { align: 'right' }
+                        doc.text(text, pageWidth - config.margin, pageHeight - 7, {
+                            align: 'right'
+                        });
+                        // --- AKHIR PERUBAHAN ---
+                    }
                 };
 
-                const renderSongToDoc = (song, yPos) => {
-                    let currentY = yPos;
-                    doc.setFont("helvetica", "bold").setFontSize(config.songTitleSize).setTextColor(0, 0, 0).text(song.title || 'Tanpa Judul', pageWidth / 2, currentY, {
+                let y = margin; // Posisi Y (vertikal) saat ini
+                let tocData = [];
+
+                // --- RENDER SEMUA LAGU DENGAN PAGINATION YANG BENAR ---
+                filteredSongsData.forEach((song) => {
+                    const songTitle = song.title || 'Tanpa Judul';
+                    const titleHeight = config.songTitleSize / 2; // Perkiraan tinggi judul
+                    let isFirstPartOfSong = true;
+
+                    // Cek apakah judul muat. Jika tidak, buat halaman baru.
+                    if (y + titleHeight > pageBottom && y > margin) {
+                        doc.addPage();
+                        y = margin;
+                    }
+
+                    // Catat halaman awal lagu untuk ToC
+                    tocData.push({
+                        title: songTitle,
+                        page: doc.internal.getNumberOfPages()
+                    });
+
+                    // Tulis Judul
+                    doc.setFont("helvetica", "bold").setFontSize(config.songTitleSize).setTextColor(0, 0, 0);
+                    doc.text(songTitle, pageWidth / 2, y, {
                         align: 'center'
                     });
-                    currentY += 10;
-                    doc.setFont("courier", "normal");
+                    y += titleHeight;
+
+                    // Loop per baris notasi
                     song.lines.forEach(line => {
-                        if (currentY > pageHeight - (config.margin + 5)) {
+                        const lineHeight = config.lineGap;
+
+                        // Jika baris berikutnya tidak muat, buat halaman baru
+                        if (y + lineHeight > pageBottom) {
                             doc.addPage();
-                            currentY = config.margin;
-                            addPageNumber(doc.internal.getNumberOfPages());
+                            y = margin;
+                            // Baris yang menulis ulang judul "(Lanjutan)" sudah dihapus.
                         }
-                        let currentX = config.margin;
+
+                        // Render satu baris notasi (dengan wrapping horizontal jika perlu)
+                        let x = margin;
+                        doc.setFont("courier", "normal");
                         line.forEach(slot => {
+                            const noteText = slot.note || '';
+                            const lyricText = slot.lyric || '';
+
                             doc.setFontSize(config.noteSize);
-                            const noteWidth = doc.getTextWidth(slot.note);
+                            const noteWidth = doc.getTextWidth(noteText);
                             doc.setFontSize(config.lyricSize);
-                            const lyricWidth = doc.getTextWidth(slot.lyric);
-                            const contentWidth = Math.max(noteWidth, lyricWidth);
-                            const blockPadding = 1;
-                            const fullBlockWidth = contentWidth + (blockPadding * 2);
-                            const spaceBetweenBlocks = 1.5;
-                            if (currentX + fullBlockWidth > pageWidth - config.margin) {
-                                currentY += config.wrapGap;
-                                currentX = config.margin;
-                                if (currentY > pageHeight - (config.margin + 5)) {
+                            const lyricWidth = doc.getTextWidth(lyricText);
+
+                            const slotWidth = Math.max(noteWidth, lyricWidth) + 2; // Lebar slot + padding kecil
+
+                            // Jika slot berikutnya tidak muat secara horizontal, pindah baris
+                            if (x + slotWidth > pageWidth - margin) {
+                                x = margin;
+                                y += lineHeight;
+
+                                // Cek lagi setelah pindah baris, mungkin perlu pindah halaman juga
+                                if (y + lineHeight > pageBottom) {
                                     doc.addPage();
-                                    currentY = config.margin;
-                                    addPageNumber(doc.internal.getNumberOfPages());
+                                    y = margin;
+                                    // Baris yang menulis ulang judul "(Lanjutan)" sudah dihapus.
                                 }
                             }
-                            if (slot.note.trim() !== '') {
-                                doc.setFillColor(235, 235, 235);
-                                doc.rect(currentX, currentY - 3.5, fullBlockWidth, 7.5, 'F');
+
+                            // Gambar slot
+                            doc.setFontSize(config.noteSize).setTextColor(0, 0, 0);
+                            doc.text(noteText, x + 1, y);
+
+                            if (lyricText) {
+                                doc.setFontSize(config.lyricSize).setTextColor(100);
+                                doc.text(lyricText, x + 1, y + (config.lyricSize / 2));
                             }
-                            const noteX = currentX + blockPadding + (contentWidth - noteWidth) / 2;
-                            const lyricX = currentX + blockPadding + (contentWidth - lyricWidth) / 2;
-                            doc.setFontSize(config.noteSize).setTextColor(0, 0, 0).text(slot.note, noteX, currentY);
-                            if (slot.lyric.trim()) {
-                                doc.setFontSize(config.lyricSize).setTextColor(80, 80, 80).text(slot.lyric, lyricX, currentY + 3.5);
-                            }
-                            currentX += fullBlockWidth + spaceBetweenBlocks;
+
+                            x += slotWidth; // Pindah posisi X untuk slot berikutnya
                         });
-                        currentY += config.lineGap;
+
+                        y += lineHeight; // Pindah posisi Y untuk baris berikutnya
                     });
-                    return currentY;
-                };
 
-                if (filteredSongsData.length === 1) {
-                    renderSongToDoc(filteredSongsData[0], 20);
-                    addPageNumber(1);
-                    doc.save(fileName);
-                } else {
-                    const coverImg = new Image();
-                    coverImg.src = 'images/cover buku.png';
-                    coverImg.onload = function() {
-                        doc.addImage(this, 'PNG', 0, 0, pageWidth, pageHeight);
+                    y += config.wrapGap / 2; // Jarak antar lagu
+                });
 
-                        let pageLinks = {};
-                        let currentPageNum = 2;
-                        filteredSongsData.forEach((song, index) => {
-                            pageLinks[index] = currentPageNum + 1;
-                            let tempY = config.margin + 5 + 10;
-                            song.lines.forEach(line => {
-                                if (tempY > pageHeight - 15) {
-                                    currentPageNum++;
-                                    tempY = config.margin;
-                                }
-                                tempY += config.lineGap;
-                            });
-                            currentPageNum++;
-                        });
+                // --- RENDER DAFTAR ISI DI HALAMAN PERTAMA ---
+                if (filteredSongsData.length > 1) {
+                    doc.insertPage(1); // Sisipkan halaman baru di paling depan untuk ToC
+                    doc.setPage(1);
+                    y = margin;
 
-                        doc.addPage();
-                        let yPos = 20;
-                        doc.setFont("helvetica", "bold").setFontSize(config.titleSize).text('Album Kalimba', pageWidth / 2, yPos, {
-                            align: 'center'
-                        });
-                        yPos += 12;
-                        doc.setFont("helvetica", "bold").setFontSize(config.tocTitleSize).text('Daftar Isi', pageWidth / 2, yPos, {
-                            align: 'center'
-                        });
-                        yPos += 15;
-                        doc.setFont("times", "normal").setFontSize(config.noteSize + 1);
-                        filteredSongsData.forEach((song, index) => {
-                            if (yPos > pageHeight - 15) {
-                                doc.addPage();
-                                addPageNumber(doc.internal.getNumberOfPages());
-                                yPos = config.margin;
-                            }
-                            const title = song.title || 'Tanpa Judul';
-                            const pageNum = pageLinks[index].toString();
+                    doc.setFont("helvetica", "bold").setFontSize(config.tocTitleSize);
+                    doc.text("Daftar Isi", pageWidth / 2, y, {
+                        align: 'center'
+                    });
+                    y += config.wrapGap;
 
-                            doc.setTextColor(0, 0, 0); // Pastikan warna hitam
+                    doc.setFont("times", "normal").setFontSize(config.noteSize);
+                    tocData.forEach(item => {
+                        const pageNumberText = (item.page + 1).toString(); // Tambah 1 karena ToC jadi halaman 1
+                        const titleText = item.title;
 
-                            // Gambar Judul di kiri
-                            doc.text(title, config.margin, yPos);
-
-                            // Gambar Nomor Halaman di kanan
-                            const pageNumWidth = doc.getTextWidth(pageNum);
-                            doc.text(pageNum, pageWidth - config.margin - pageNumWidth, yPos);
-
-                            // Kalkulasi dan gambar titik-titik dinamis di antaranya
-                            const titleWidth = doc.getTextWidth(title);
-                            const dotWidth = doc.getTextWidth('.');
-                            const startX = config.margin + titleWidth + 2; // Mulai titik 2mm setelah judul
-                            const endX = pageWidth - config.margin - pageNumWidth - 2; // Akhiri titik 2mm sebelum nomor halaman
-
-                            if (startX < endX) {
-                                const numDots = Math.floor((endX - startX) / dotWidth);
-                                doc.text('.'.repeat(numDots), startX, yPos);
-                            }
-
-                            yPos += (config.lineGap / 1.5);
-                        });
-                        addPageNumber(2);
-
-                        filteredSongsData.forEach(song => {
+                        if (y + config.lineGap > pageBottom) {
                             doc.addPage();
-                            addPageNumber(doc.internal.getNumberOfPages());
-                            renderSongToDoc(song, 20);
-                        });
-                        doc.save(fileName);
-                    };
-                    coverImg.onerror = function() {
-                        alert('Gagal memuat "cover buku.png". PDF akan dibuat tanpa cover.');
-                        doc.save(fileName);
-                    }
+                            y = margin;
+                        }
+
+                        // Gambar judul, titik-titik, dan nomor halaman
+                        const titleWidth = doc.getTextWidth(titleText);
+                        const pageNumWidth = doc.getTextWidth(pageNumberText);
+                        const availableWidth = pageWidth - margin * 2 - titleWidth - pageNumWidth - 2;
+                        const dotWidth = doc.getTextWidth('.');
+                        const numDots = Math.floor(availableWidth / dotWidth);
+
+                        const dots = '.'.repeat(numDots > 0 ? numDots : 0);
+
+                        doc.text(titleText, margin, y);
+                        doc.text(dots, margin + titleWidth + 1, y);
+                        doc.text(pageNumberText, pageWidth - margin - pageNumWidth, y);
+
+                        y += config.lineGap / 1.5;
+                    });
                 }
+
+                // --- TAMBAHKAN NOMOR HALAMAN DI SEMUA HALAMAN ---
+                addPageNumbers(doc);
+
+                // --- Simpan PDF ---
+                doc.save(`Kalimelody_Album_${paperSize}.pdf`);
             }
 
             // --- EVENT LISTENERS ---
