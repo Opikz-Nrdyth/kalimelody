@@ -619,8 +619,25 @@ $all_songs_data = get_all_songs_data();
                 // --- TAMBAHKAN NOMOR HALAMAN DI SEMUA HALAMAN ---
                 addPageNumbers(doc);
 
-                // --- Simpan PDF ---
-                doc.save(`Kalimelody_Album_${paperSize}.pdf`);
+                // --- BAGIAN BARU: LOGIKA PENAMAAN FILE ---
+                let fileName = '';
+
+                if (filteredSongsData.length === 1) {
+                    // KASUS 1: Jika hanya 1 lagu, gunakan format "JudulLagu_UkuranKertas.pdf"
+                    const songTitle = filteredSongsData[0].title || 'Tanpa Judul';
+
+                    // Bersihkan judul lagu agar aman untuk nama file
+                    const safeTitle = songTitle.replace(/[^A-Za-z0-9_\-]/g, '_').replace(/_+/g, '_');
+
+                    fileName = `${safeTitle}_${paperSize}.pdf`;
+                } else {
+                    // KASUS 2: Jika lebih dari 1 lagu, gunakan format "Kalimelody_UkuranKertas.pdf"
+                    fileName = `Kalimelody_${paperSize}.pdf`;
+                }
+                // --- AKHIR BAGIAN BARU ---
+
+                // --- Simpan PDF dengan nama file dinamis ---
+                doc.save(fileName);
             }
 
             // --- EVENT LISTENERS ---
