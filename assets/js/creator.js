@@ -142,14 +142,16 @@ window.onload = function () {
         slotsAndInsertersDiv.appendChild(slotDiv);
 
         // tombol sisip (+) setelah setiap not
-        const insertBtn = document.createElement("button");
-        insertBtn.innerHTML = '<i class="fas fa-plus"></i>';
-        insertBtn.className =
-          "insert-slot-btn bg-green-100 text-green-600 w-4 h-4 rounded-full hover:bg-green-200 flex-shrink-0 mx-1 text-xs";
-        insertBtn.title = "Sisipkan not baru di sini";
-        insertBtn.dataset.line = lineIndex;
-        insertBtn.dataset.slot = slotIndex + 1; // Akan menyisipkan di posisi setelah slot ini
-        slotsAndInsertersDiv.appendChild(insertBtn);
+        if (slotIndex < line.length - 1) {
+          const insertBtn = document.createElement("button");
+          insertBtn.innerHTML = '<i class="fas fa-plus"></i>';
+          insertBtn.className =
+            "insert-slot-btn bg-green-100 text-green-600 w-4 h-4 rounded-full hover:bg-green-200 flex-shrink-0 mx-1 text-xs";
+          insertBtn.title = "Sisipkan not baru di sini";
+          insertBtn.dataset.line = lineIndex;
+          insertBtn.dataset.slot = slotIndex + 1; // Akan menyisipkan di posisi setelah slot ini
+          slotsAndInsertersDiv.appendChild(insertBtn);
+        }
       });
 
       lineDiv.appendChild(slotsAndInsertersDiv);
@@ -181,12 +183,21 @@ window.onload = function () {
       const actionsContainer = lineDiv.querySelector(".line-actions");
       actionsContainer.innerHTML = ""; // Kosongkan dulu
 
+      // Tombol Tambah
+      const addSlotBtn = document.createElement("button");
+      addSlotBtn.innerHTML = '<i class="fas fa-plus-circle"></i>';
+      addSlotBtn.title = "Tambah Not di Ujung";
+      addSlotBtn.className =
+        "line-action-btn add-slot-btn bg-green-100 text-green-800 font-semibold w-8 h-8 rounded-full hover:bg-green-200";
+      addSlotBtn.dataset.line = lineIndex;
+      actionsContainer.appendChild(addSlotBtn);
+
       // Tombol Copy
       const copyBtn = document.createElement("button");
       copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
       copyBtn.title = "Salin Baris";
       copyBtn.className =
-        "line-action-btn copy-line-btn bg-yellow-100 text-yellow-800 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-200";
+        "line-action-btn copy-line-btn bg-yellow-100 text-yellow-800 font-semibold w-8 h-8 rounded-full hover:bg-yellow-200";
       copyBtn.dataset.line = lineIndex;
       actionsContainer.appendChild(copyBtn);
     });
@@ -378,6 +389,20 @@ window.onload = function () {
       const slotIndex = parseInt(insertBtn.dataset.slot);
       tabData.lines[lineIndex].splice(slotIndex, 0, { note: "", lyric: "" });
       renderNotationGrid();
+    }
+
+    const addSlotBtn = e.target.closest(".add-slot-btn");
+    if (addSlotBtn) {
+      const lineIndex = parseInt(addSlotBtn.dataset.line);
+      const newSlotIndex = tabData.lines[lineIndex].length;
+      tabData.lines[lineIndex].push({
+        note: "",
+        lyric: "",
+      });
+      renderNotationGrid({
+        line: lineIndex,
+        slot: newSlotIndex,
+      });
     }
 
     const deleteSlotBtn = e.target.closest(".delete-slot-btn");
