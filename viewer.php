@@ -51,7 +51,7 @@ require_once("./php/viewer.php");
 <body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300">
     <div class="container mx-auto p-4 md:p-8 max-w-4xl">
         <nav class="mb-8 flex justify-between items-center">
-            <a href="index.php" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-semibold"><i class="fas fa-arrow-left mr-2"></i>Kembali ke Daftar Lagu</a>
+            <a href="index.php" class="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-semibold"><i class="fas fa-arrow-left mr-2"></i><span class="hidden md:block">Kembali ke Daftar Lagu</span></a>
 
             <div>
                 <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">

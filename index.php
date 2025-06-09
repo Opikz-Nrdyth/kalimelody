@@ -130,11 +130,14 @@
                     <?php else: ?>
                         <?php foreach ($songs_to_display as $song): ?>
                             <tr class="border-t border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-gray-200 dark:hover:bg-slate-700/50">
-                                <td class="p-4 font-semibold whitespace-nowrap">
-                                    <a href="viewer.php?song=<?= str_replace([".json", "tab_"], ["", ""], urlencode($song['filename'])) ?>"><?= $song['title'] ?></a>
-                                    <?php if ($song['status'] === 'draf'): ?>
-                                        <span class="ml-2 text-xs font-semibold bg-gray-200 text-gray-700 dark:bg-slate-900 dark:text-slate-400 px-2 py-1 rounded-full align-middle">Draf</span>
-                                    <?php endif; ?>
+                                <td class="font-semibold whitespace-nowrap">
+                                    <a class="block w-full h-full p-4" href="viewer.php?song=<?= str_replace([".json", "tab_"], ["", ""], urlencode($song['filename'])) ?>">
+                                        <?= $song['title'] ?>
+                                        <?php if ($song['status'] === 'draf'): ?>
+                                            <span class="ml-2 text-xs font-semibold bg-gray-200 text-gray-700 dark:bg-slate-900 dark:text-slate-400 px-2 py-1 rounded-full align-middle">Draf</span>
+                                        <?php endif; ?>
+                                    </a>
+
                                 </td>
                                 <td class="p-4 flex justify-center items-center gap-4 text-slate-600 dark:text-slate-400">
                                     <a href="index.php?action=backup_song&file=<?= urlencode($song['filename']) ?>" class="text-transparent backup-btn whitespace-nowrap">
