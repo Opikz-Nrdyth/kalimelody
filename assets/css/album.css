@@ -1,0 +1,96 @@
+body {
+  background-color: #f1f5f9;
+}
+
+#page-content-container {
+  font-family: "Georgia", serif;
+  color: #334155;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.toc-title {
+  font-size: 24px;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+}
+
+.toc-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.toc-item .dots {
+  flex-grow: 1;
+  border-bottom: 1px dotted #999;
+  margin: 0 5px;
+  transform: translateY(-4px);
+}
+
+.song-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #1e3a8a;
+}
+
+.song-refrensi {
+  font-size: 11px;
+  font-style: italic;
+  color: #64748b;
+  /* Warna abu-abu */
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.line-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+  font-family: "Courier New", monospace;
+}
+
+.slot-preview {
+  /*background-color: #eef2ff;*/
+  border-radius: 4px;
+  padding: 4px 6px;
+  text-align: center;
+  min-width: 35px;
+}
+
+.note-preview {
+  display: block;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.lyric-preview {
+  display: block;
+  font-size: 10px;
+  color: #4b5563;
+  margin-top: 2px;
+}
+
+.paper-option {
+  transition: all 0.2s ease-in-out;
+  border: 2px solid #e5e7eb;
+}
+
+.paper-option:hover {
+  border-color: #93c5fd;
+  background-color: #eff6ff;
+}
+
+.paper-option.selected {
+  border-color: #2563eb;
+  background-color: #dbeafe;
+  transform: scale(1.03);
+}

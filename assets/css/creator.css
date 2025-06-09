@@ -1,0 +1,60 @@
+html,
+body {
+  overflow-x: hidden;
+}
+
+body {
+  background-color: #f0f4f8;
+  font-family: "Inter", sans-serif;
+}
+
+.lyric-input {
+  color: #888;
+}
+
+.note-input:focus,
+.lyric-input:focus {
+  transform: scale(1.05);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+}
+
+#preview-area {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  background-color: #e2e8f0;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.keyboard-key {
+  touch-action: manipulation;
+}
+
+/* Gaya untuk CapsLock Aktif */
+.caps-active {
+  background-color: #3b82f6 !important;
+  /* bg-blue-500 */
+  color: white !important;
+}
+
+@media (max-width: 920px) {
+  #virtual-keyboard-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    transition: transform 0.3s ease-in-out;
+    transform: translateY(100%);
+    border-top: 1px solid #cbd5e1;
+    width: 100% !important;
+  }
+
+  #virtual-keyboard-container.keyboard-visible {
+    transform: translateY(0);
+  }
+
+  #app {
+    padding-bottom: 250px;
+  }
+}

@@ -1,173 +1,4 @@
-<?php
-// --- LOGIKA PHP UNTUK MENGHAPUS FILE ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
-    header('Content-Type: application/json');
-
-    if (isset($_POST['filename'])) {
-        // Keamanan: Gunakan basename() untuk mencegah directory traversal attack (../)
-        $filenameToDelete = basename($_POST['filename']);
-        $filePath = 'tabs/' . $filenameToDelete;
-
-        if (file_exists($filePath)) {
-            if (unlink($filePath)) {
-                echo json_encode(['status' => 'success', 'message' => 'Lagu berhasil dihapus.']);
-            } else {
-                echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus file di server.']);
-            }
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'File tidak ditemukan.']);
-        }
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Nama file tidak diberikan.']);
-    }
-    exit; // Wajib ada agar tidak merender HTML
-}
-
-
-// --- LOGIKA PHP UNTUK MENAMPILKAN DAFTAR LAGU ---
-function get_saved_tabs()
-{
-    $tabsDir = 'tabs';
-    $songs = [];
-    if (!is_dir($tabsDir)) return [];
-
-    $files = glob($tabsDir . '/*.json');
-    rsort($files); // Urutkan agar yang terbaru di atas
-    foreach ($files as $file) {
-        $content = file_get_contents($file);
-        $data = json_decode($content, true);
-        if (json_last_error() === JSON_ERROR_NONE && isset($data['title'])) {
-            $songs[] = [
-                'filename' => basename($file),
-                'title' => !empty($data['title']) ? htmlspecialchars($data['title']) : 'Tanpa Judul',
-                'content' => htmlspecialchars($content, ENT_QUOTES, 'UTF-8')
-            ];
-        }
-    }
-    return $songs;
-}
-
-$saved_songs = get_saved_tabs();
-
-function handle_song_backup($fileName)
-{
-    $safeFileName = basename($fileName);
-    $tabsDir = 'tabs';
-    $backupsDir = 'backups';
-    $sourceFile = $tabsDir . '/' . $safeFileName;
-
-    if (!file_exists($sourceFile)) {
-        header('Location: index.php?status=backup_failed&reason=file_not_found');
-        exit;
-    }
-
-    // Buat direktori backup khusus untuk lagu ini jika belum ada
-    $songBackupDir = $backupsDir . '/' . $safeFileName;
-    if (!is_dir($songBackupDir)) {
-        mkdir($songBackupDir, 0777, true);
-    }
-
-    // Buat nama file backup dengan timestamp
-    $backupFileName = 'backup_' . date('Y-m-d_H-i-s') . '.json';
-    $destinationFile = $songBackupDir . '/' . $backupFileName;
-
-    if (copy($sourceFile, $destinationFile)) {
-        header('Location: index.php');
-        exit;
-    } else {
-        header('Location: index.php?status=backup_failed&reason=copy_failed');
-        exit;
-    }
-}
-
-// --- FUNGSI UNTUK MENANGANI RESTORE PER LAGU ---
-function handle_song_restore($fileName)
-{
-    $safeFileName = basename($fileName);
-    $tabsDir = 'tabs';
-    $backupsDir = 'backups';
-    $targetFile = $tabsDir . '/' . $safeFileName;
-    $songBackupDir = $backupsDir . '/' . $safeFileName;
-
-    if (!is_dir($songBackupDir)) {
-        header('Location: index.php?status=restore_failed&reason=no_backups_for_this_song');
-        exit;
-    }
-
-    // Cari file backup terbaru di dalam folder backup lagu ini
-    $allBackups = scandir($songBackupDir, SCANDIR_SORT_DESCENDING);
-    $latestBackupFile = '';
-    foreach ($allBackups as $backup) {
-        if ($backup !== '.' && $backup !== '..') {
-            $latestBackupFile = $backup;
-            break;
-        }
-    }
-
-    if (empty($latestBackupFile)) {
-        header('Location: index.php?status=restore_failed&reason=no_backups_found');
-        exit;
-    }
-
-    $restoreSource = $songBackupDir . '/' . $latestBackupFile;
-
-    // (Opsional tapi direkomendasikan) Buat backup mikro sebelum menimpa
-    copy($targetFile, $songBackupDir . '/before_restore_' . date('Y-m-d_H-i-s') . '.json');
-
-    // Timpa file asli dengan file dari backup
-    if (copy($restoreSource, $targetFile)) {
-        return true; // Kembalikan true jika berhasil
-    } else {
-        return false; // Kembalikan false jika gagal
-    }
-}
-
-function get_restorable_songs()
-{
-    $tabsDir = 'tabs';
-    $backupsDir = 'backups';
-
-    if (!is_dir($backupsDir)) {
-        return [];
-    }
-
-    // 1. Dapatkan semua nama file yang ada di folder /tabs
-    $current_files_paths = glob($tabsDir . '/*.json');
-    $current_files = array_map('basename', $current_files_paths);
-
-    // 2. Dapatkan semua nama folder backup per-lagu
-    $backup_dirs_paths = glob($backupsDir . '/*', GLOB_ONLYDIR);
-    $backup_dirs = array_map('basename', $backup_dirs_paths);
-
-    // 3. Cari perbedaannya: folder backup yang tidak memiliki file di /tabs
-    $restorable_files = array_diff($backup_dirs, $current_files);
-
-    return $restorable_files;
-}
-
-// --- CONTROLLER UTAMA UNTUK MENANGANI AKSI ---
-if (isset($_GET['action']) && isset($_GET['file'])) {
-    $file = $_GET['file'];
-    if ($_GET['action'] === 'backup_song') {
-        handle_song_backup($file);
-    }
-    if ($_GET['action'] === 'restore_song') {
-        handle_song_restore($file);
-    }
-}
-
-// Penanganan aksi POST dari modal restore
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    if ($_POST['action'] === 'restore_selected' && isset($_POST['songs_to_restore']) && is_array($_POST['songs_to_restore'])) {
-        $restored_count = 0;
-        foreach ($_POST['songs_to_restore'] as $file_to_restore) {
-            handle_song_restore($file_to_restore);
-        }
-        header('Location: index.php?status=restore_selected_success');
-        exit;
-    }
-}
-?>
+<?php require_once("./php/index.php") ?>
 <!DOCTYPE html>
 <html lang="id">
 
@@ -195,57 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     <meta name="twitter:title" content="Kalimelody - A Collection of Notes from the Heart">
     <meta name="twitter:description" content="Temukan ketenangan jiwa melalui Kalimelody, sebuah koleksi nada dan tulisan dari hati yang menenangkan.">
     <meta name="twitter:image" content="http://googleusercontent.com/image_generation_content/1">
-    <link rel="icon" href="/images/icon.png" type="image/png">
+    <link rel="icon" href="/assets/images/icon.png" type="image/png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        body {
-            background-color: #f0f4f8;
-        }
-
-        .line-preview {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2px;
-            margin-bottom: 10px;
-            font-family: 'Courier New', Courier, monospace;
-        }
-
-        .slot-preview {
-            /*background-color: #e9e9e9;*/
-            border-radius: 4px;
-            padding: 5px 8px;
-            text-align: center;
-            min-width: 40px;
-        }
-
-        .note-preview {
-            display: block;
-            font-weight: bold;
-            font-size: 1em;
-        }
-
-        .lyric-preview {
-            display: block;
-            font-size: 0.85em;
-            color: #555;
-            margin-top: -2px;
-        }
-
-        /* Style untuk transisi dan mode fullscreen modal */
-        #preview-modal .modal-container {
-            transition: all 0.3s ease-in-out;
-        }
-
-        #preview-modal .modal-fullscreen {
-            width: 100vw;
-            height: 100vh;
-            max-width: 100vw;
-            max-height: 100vh;
-            border-radius: 0;
-        }
-    </style>
+    <link rel="stylesheet" href="/assets/css/index.css">
 </head>
 
 <body class="antialiased text-slate-800">
@@ -254,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         <header class="flex flex-wrap gap-4 justify-between items-center mb-6 pb-4 border-b border-slate-300">
             <h1 class="text-3xl md:text-4xl font-bold text-slate-700 flex items-center">
                 <i class="fa-solid fa-list-music text-blue-500 mr-3"></i>
-                Daftar Lagu
+                Daftar Lagu <?= ($view_status === 'draf') ? 'Draf' : '' ?>
             </h1>
             <div class="flex gap-2 flex-wrap">
                 <button id="show-restore-modal-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg shadow-md">
@@ -308,6 +93,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             </div>
         </div>
 
+        <div class="mb-4">
+            <form action="index.php" method="GET" class="flex items-center gap-2">
+                <input type="text" name="search" placeholder="Cari berdasarkan judul..." class="w-full p-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+
+                <input type="hidden" name="show" value="<?= htmlspecialchars($view_status) ?>">
+
+                <button type="submit" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
         <div class="bg-white rounded-lg shadow-md overflow-x-auto">
             <table id="song-list-table" class="w-full">
                 <thead class="bg-slate-100 text-left text-slate-600">
@@ -317,14 +113,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (empty($saved_songs)): ?>
+                    <?php if (empty($songs_to_display)): ?>
                         <tr id="no-songs-row">
                             <td colspan="2" class="p-8 text-center text-slate-500">
                                 Belum ada lagu yang disimpan. <a href="creator.php" class="text-blue-500 hover:underline">Mulai buat sekarang!</a>
                             </td>
                         </tr>
                     <?php else: ?>
-                        <?php foreach ($saved_songs as $song): ?>
+                        <?php foreach ($songs_to_display as $song): ?>
                             <tr class="border-t border-slate-200 cursor-pointer hover:bg-gray-200">
                                 <td class="p-4 font-semibold whitespace-nowrap preview-btn" data-song-content='<?= $song['content'] ?>'><?= $song['title'] ?></td>
                                 <td class="p-4 flex justify-center items-center gap-4">
@@ -347,6 +143,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     <?php endif; ?>
                 </tbody>
             </table>
+
+        </div>
+        <div class="flex justify-center mt-8">
+            <?php if ($view_status === 'publish'): ?>
+                <a href="index.php?show=draf" class="...">
+                    <i class="fas fa-eye-slash mr-2"></i>Tampilkan Draf
+                </a>
+            <?php else: ?>
+                <a href="index.php" class="...">
+                    <i class="fas fa-eye mr-2"></i>Tampilkan Publish
+                </a>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -372,188 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     <div id="notification" class="fixed top-5 right-5 text-white py-2 px-4 rounded-lg shadow-xl transition-all duration-300 opacity-0 -translate-y-10 z-50"></div>
 
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const modal = document.getElementById('preview-modal');
-            const modalTitle = document.getElementById('modal-title');
-            const modalRefrensi = document.getElementById('modal-refrensi');
-            const modalContent = document.getElementById('modal-content');
-            const modalCloseBtn = document.getElementById('modal-close-btn');
-            const songListTable = document.getElementById('song-list-table');
-            const notification = document.getElementById('notification');
-            // Tombol fullscreen baru
-            const modalFullscreenBtn = document.getElementById('modal-fullscreen-btn');
-            const showRestoreModalBtn = document.getElementById('show-restore-modal-btn');
-            const restoreModal = document.getElementById('restore-modal');
-            const cancelRestoreBtn = document.getElementById('cancel-restore-btn');
-            const backupButtons = document.querySelectorAll('.backup-btn');
-            const DOUBLE_CLICK_THRESHOLD = 400;
-
-            backupButtons.forEach(button => {
-                // Gunakan 'lastClick' sebagai penanda waktu klik terakhir untuk setiap tombol
-                button.dataset.lastClick = 0;
-
-                button.addEventListener('click', function(event) {
-                    const currentTime = new Date().getTime();
-                    const lastClickTime = parseInt(button.dataset.lastClick);
-
-                    // Cek selisih waktu antara klik sekarang dan klik terakhir
-                    if (currentTime - lastClickTime < DOUBLE_CLICK_THRESHOLD) {
-                        // INI ADALAH DOUBLE-CLICK!
-                        // Biarkan aksi default (pindah halaman) berjalan.
-                        // Reset waktu klik agar urutan dimulai lagi.
-                        button.dataset.lastClick = 0;
-                        // Anda bisa tambahkan konfirmasi final di sini jika mau
-                        if (!confirm('Konfirmasi backup untuk lagu ini?')) {
-                            event.preventDefault(); // Batalkan jika pengguna menekan "Cancel"
-                        }
-                    } else {
-                        // INI ADALAH KLIK PERTAMA (ATAU KLIK YANG TERLALU LAMBAT)
-                        // 1. Cegah aksi default link agar tidak pindah halaman
-                        event.preventDefault();
-
-                        // 2. Simpan waktu klik saat ini pada tombol
-                        button.dataset.lastClick = currentTime;
-
-                        // 3. Beri feedback visual kepada pengguna (opsional tapi sangat disarankan)
-                        const originalHTML = button.innerHTML;
-                        button.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i>Klik lagi!';
-
-                        // 4. Kembalikan teks tombol ke semula setelah beberapa saat
-                        setTimeout(() => {
-                            // Hanya kembalikan jika belum ada klik kedua
-                            if (parseInt(button.dataset.lastClick) !== 0) {
-                                button.innerHTML = originalHTML;
-                                button.dataset.lastClick = 0; // Reset
-                            }
-                        }, 1500); // Reset setelah 1.5 detik
-                    }
-                });
-            });
-
-            // Modal Controller
-            showRestoreModalBtn.addEventListener('click', () => {
-                restoreModal.classList.remove('hidden');
-            });
-            cancelRestoreBtn.addEventListener('click', () => {
-                restoreModal.classList.add('hidden');
-            });
-            restoreModal.addEventListener('click', (e) => {
-                if (e.target === dom.restoreModal) {
-                    restoreModal.classList.add('hidden');
-                }
-            });
-
-            // --- EVENT LISTENERS ---
-            songListTable.addEventListener('click', async (e) => {
-                /* ... (fungsi ini tidak berubah) ... */
-                const previewBtn = e.target.closest('.preview-btn');
-                const deleteBtn = e.target.closest('.delete-btn');
-
-                if (previewBtn) {
-                    const songDataJSON = previewBtn.dataset.songContent;
-                    const songData = JSON.parse(songDataJSON);
-                    modalTitle.textContent = songData.title || 'Pratinjau';
-                    if (!songData.refrensi) {
-                        modalRefrensi.classList.add("hidden")
-                    } else {
-                        modalRefrensi.classList.remove("hidden")
-                    }
-                    modalRefrensi.setAttribute("href", songData.refrensi || "")
-                    modalContent.innerHTML = formatPreviewHTML(songData);
-                    modal.classList.remove('hidden');
-                }
-
-                if (deleteBtn) {
-                    const title = deleteBtn.dataset.title;
-                    const filename = deleteBtn.dataset.filename;
-                    if (!confirm(`Apakah Anda yakin ingin menghapus lagu "${title}"?`)) return;
-
-                    const formData = new FormData();
-                    formData.append('action', 'delete');
-                    formData.append('filename', filename);
-                    try {
-                        const response = await fetch('index.php', {
-                            method: 'POST',
-                            body: formData
-                        });
-                        const result = await response.json();
-                        if (response.ok && result.status === 'success') {
-                            showNotification(result.message, false);
-                            deleteBtn.closest('tr').remove();
-                            if (songListTable.querySelector('tbody tr') === null) {
-                                const tbody = songListTable.querySelector('tbody');
-                                tbody.innerHTML = `<tr id="no-songs-row"><td colspan="2" class="p-8 text-center text-slate-500">Belum ada lagu yang disimpan.</td></tr>`;
-                            }
-                        } else {
-                            throw new Error(result.message);
-                        }
-                    } catch (error) {
-                        showNotification(error.message || 'Terjadi kesalahan.', true);
-                    }
-                }
-            });
-
-            // Event listener untuk tombol fullscreen
-            modalFullscreenBtn.addEventListener('click', () => {
-                const modalContainer = modal.querySelector('.modal-container');
-                const icon = modalFullscreenBtn.querySelector('i');
-
-                modalContainer.classList.toggle('modal-fullscreen');
-
-                if (modalContainer.classList.contains('modal-fullscreen')) {
-                    icon.classList.remove('fa-expand');
-                    icon.classList.add('fa-compress');
-                    modalFullscreenBtn.title = 'Kembali ke normal';
-                } else {
-                    icon.classList.remove('fa-compress');
-                    icon.classList.add('fa-expand');
-                    modalFullscreenBtn.title = 'Layar Penuh';
-                }
-            });
-
-            // --- FUNGSI-FUNGSI HELPER ---
-            function closeModal() {
-                // Pastikan keluar dari mode fullscreen saat ditutup
-                const modalContainer = modal.querySelector('.modal-container');
-                const icon = modalFullscreenBtn.querySelector('i');
-                if (modalContainer.classList.contains('modal-fullscreen')) {
-                    modalContainer.classList.remove('modal-fullscreen');
-                    icon.classList.remove('fa-compress');
-                    icon.classList.add('fa-expand');
-                    modalFullscreenBtn.title = 'Layar Penuh';
-                }
-                modal.classList.add('hidden');
-            }
-            modalCloseBtn.addEventListener('click', closeModal);
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    closeModal();
-                }
-            });
-
-            function formatPreviewHTML(tabData) {
-                /* ... (fungsi ini tidak berubah) ... */
-                let htmlOutput = '';
-                tabData.lines.forEach(line => {
-                    let lineHTML = '<div class="line-preview">';
-                    line.forEach(slot => {
-                        lineHTML += `<div class="slot-preview"><span class="note-preview">${slot.note || '&nbsp;'}</span><span class="lyric-preview">${slot.lyric || '&nbsp;'}</span></div>`;
-                    });
-                    lineHTML += '</div>';
-                    htmlOutput += lineHTML;
-                });
-                return htmlOutput;
-            }
-
-            function showNotification(message, isError = false) {
-                /* ... (fungsi ini tidak berubah) ... */
-                notification.textContent = message;
-                notification.className = 'fixed top-5 right-5 text-white py-2 px-4 rounded-lg shadow-xl transition-all duration-300 z-50 ' + (isError ? 'bg-red-500' : 'bg-green-500');
-                notification.classList.remove('opacity-0', '-translate-y-10');
-                setTimeout(() => notification.classList.add('opacity-0', '-translate-y-10'), 3000);
-            }
-        });
+    <script src="/assets/js/index.js">
     </script>
 
 </body>

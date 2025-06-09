@@ -1,563 +1,569 @@
 {
-    "title": "Lesung Pipi - Els Kalimba",
-    "lines": [
-        [
-            {
-                "note": "1°°",
-                "lyric": "tat"
-            },
-            {
-                "note": "7°",
-                "lyric": "ka"
-            },
-            {
-                "note": "5°",
-                "lyric": "la"
-            },
-            {
-                "note": "1",
-                "lyric": ""
-            },
-            {
-                "note": "3°",
-                "lyric": "men"
-            },
-            {
-                "note": "4°",
-                "lyric": "ta"
-            },
-            {
-                "note": "5°",
-                "lyric": "ri"
-            },
-            {
-                "note": "5",
-                "lyric": ""
-            },
-            {
-                "note": "4°",
-                "lyric": "ter"
-            },
-            {
-                "note": "3°",
-                "lyric": "be"
-            },
-            {
-                "note": "4°",
-                "lyric": "nang"
-            },
-            {
-                "note": "1",
-                "lyric": ""
-            },
-            {
-                "note": "5°",
-                "lyric": "di"
-            },
-            {
-                "note": "6°",
-                "lyric": "u"
-            },
-            {
-                "note": "5",
-                "lyric": ""
-            },
-            {
-                "note": "5°",
-                "lyric": "fuk"
-            },
-            {
-                "note": "2°",
-                "lyric": "ba"
-            },
-            {
-                "note": "3",
-                "lyric": ""
-            },
-            {
-                "note": "1°",
-                "lyric": "rat"
-            }
-        ],
-        [
-            {
-                "note": "1°°",
-                "lyric": "di"
-            },
-            {
-                "note": "7°",
-                "lyric": "sa"
-            },
-            {
-                "note": "5°",
-                "lyric": "at"
-            },
-            {
-                "note": "1",
-                "lyric": ""
-            },
-            {
-                "note": "3°",
-                "lyric": "i"
-            },
-            {
-                "note": "4°",
-                "lyric": "tu"
-            },
-            {
-                "note": "5°",
-                "lyric": "lah"
-            },
-            {
-                "note": "5",
-                "lyric": ""
-            },
-            {
-                "note": "4°",
-                "lyric": "di"
-            },
-            {
-                "note": "3°",
-                "lyric": "ngin"
-            },
-            {
-                "note": "4°",
-                "lyric": "rin"
-            },
-            {
-                "note": "1",
-                "lyric": ""
-            },
-            {
-                "note": "5°",
-                "lyric": "du"
-            },
-            {
-                "note": "6°",
-                "lyric": "se"
-            },
-            {
-                "note": "5",
-                "lyric": ""
-            },
-            {
-                "note": "5°",
-                "lyric": "li"
-            },
-            {
-                "note": "2°",
-                "lyric": "mu"
-            },
-            {
-                "note": "3",
-                "lyric": ""
-            },
-            {
-                "note": "1°",
-                "lyric": "ti"
-            }
-        ],
-        [
-            {
-                "note": "1°",
-                "lyric": "ke"
-            },
-            {
-                "note": "2°",
-                "lyric": "in"
-            },
-            {
-                "note": "3°",
-                "lyric": "da"
-            },
-            {
-                "note": "5",
-                "lyric": ""
-            },
-            {
-                "note": "5°",
-                "lyric": "a"
-            },
-            {
-                "note": "2°",
-                "lyric": "a"
-            },
-            {
-                "note": "1°",
-                "lyric": "han"
-            },
-            {
-                "note": "1°",
-                "lyric": "se"
-            },
-            {
-                "note": "5°",
-                "lyric": "nyu"
-            },
-            {
-                "note": "(4°-6)",
-                "lyric": "man"
-            },
-            {
-                "note": "3°",
-                "lyric": "da"
-            },
-            {
-                "note": "2°",
-                "lyric": "ri"
-            },
-            {
-                "note": "1°",
-                "lyric": "le"
-            },
-            {
-                "note": "5°",
-                "lyric": "sung"
-            },
-            {
-                "note": "5",
-                "lyric": ""
-            },
-            {
-                "note": "4°",
-                "lyric": "pi"
-            },
-            {
-                "note": "3°",
-                "lyric": "pi"
-            },
-            {
-                "note": "2°",
-                "lyric": "i"
-            },
-            {
-                "note": "(6-1°)",
-                "lyric": "tu"
-            }
-        ],
-        [
-            {
-                "note": "1°",
-                "lyric": "me"
-            },
-            {
-                "note": "2°",
-                "lyric": "nik"
-            },
-            {
-                "note": "3°",
-                "lyric": "ma"
-            },
-            {
-                "note": "5",
-                "lyric": "ti"
-            },
-            {
-                "note": "4°",
-                "lyric": "i"
-            },
-            {
-                "note": "3°",
-                "lyric": "ma"
-            },
-            {
-                "note": "2°",
-                "lyric": "ji"
-            },
-            {
-                "note": "2",
-                "lyric": ""
-            },
-            {
-                "note": "1°",
-                "lyric": "ber"
-            },
-            {
-                "note": "7",
-                "lyric": "sa"
-            },
-            {
-                "note": "1°",
-                "lyric": "ma"
-            },
-            {
-                "note": "(5°-4)",
-                "lyric": "mu"
-            },
-            {
-                "note": "2°°",
-                "lyric": ""
-            },
-            {
-                "note": "(1°°-6)",
-                "lyric": ""
-            },
-            {
-                "note": "5°",
-                "lyric": ""
-            },
-            {
-                "note": "4°",
-                "lyric": ""
-            },
-            {
-                "note": "(1°-1)",
-                "lyric": ""
-            }
-        ],
-        [
-            {
-                "note": "1°",
-                "lyric": "ma"
-            },
-            {
-                "note": "1°",
-                "lyric": "ka"
-            },
-            {
-                "note": "1°(3-5)",
-                "lyric": "te"
-            },
-            {
-                "note": "(3°-5)",
-                "lyric": "ri"
-            },
-            {
-                "note": "4°",
-                "lyric": "ma"
-            },
-            {
-                "note": "3°",
-                "lyric": "lah"
-            },
-            {
-                "note": "2°",
-                "lyric": "di"
-            },
-            {
-                "note": "3°",
-                "lyric": "ti"
-            },
-            {
-                "note": "(4~1°)",
-                "lyric": "ku"
-            },
-            {
-                "note": "4",
-                "lyric": ""
-            }
-        ],
-        [
-            {
-                "note": "1°",
-                "lyric": "ki"
-            },
-            {
-                "note": "2°",
-                "lyric": "ta"
-            },
-            {
-                "note": "(3°-5)",
-                "lyric": "a"
-            },
-            {
-                "note": "3",
-                "lyric": ""
-            },
-            {
-                "note": "2°",
-                "lyric": "kan"
-            },
-            {
-                "note": "2°",
-                "lyric": "ba"
-            },
-            {
-                "note": "1°",
-                "lyric": "ha"
-            },
-            {
-                "note": "2°",
-                "lyric": "gi"
-            },
-            {
-                "note": "2",
-                "lyric": ""
-            },
-            {
-                "note": "1°",
-                "lyric": "a"
-            },
-            {
-                "note": "1°",
-                "lyric": ""
-            },
-            {
-                "note": "7",
-                "lyric": "se"
-            },
-            {
-                "note": "7",
-                "lyric": "la"
-            },
-            {
-                "note": "1",
-                "lyric": ""
-            },
-            {
-                "note": "1°",
-                "lyric": "ma"
-            },
-            {
-                "note": "1°",
-                "lyric": "nya"
-            },
-            {
-                "note": "5",
-                "lyric": ""
-            }
-        ],
-        [
-            {
-                "note": "1°",
-                "lyric": "ku"
-            },
-            {
-                "note": "1°",
-                "lyric": "ber"
-            },
-            {
-                "note": "1°(3-5)",
-                "lyric": "jam"
-            },
-            {
-                "note": "(3°-5)",
-                "lyric": "ji"
-            },
-            {
-                "note": "4°",
-                "lyric": "ja"
-            },
-            {
-                "note": "3°",
-                "lyric": "di"
-            },
-            {
-                "note": "2°",
-                "lyric": "su"
-            },
-            {
-                "note": "7",
-                "lyric": "a"
-            },
-            {
-                "note": "(1°-3)",
-                "lyric": "mi"
-            },
-            {
-                "note": "7",
-                "lyric": ""
-            },
-            {
-                "note": "6",
-                "lyric": "mu"
-            },
-            {
-                "note": "4",
-                "lyric": ""
-            }
-        ],
-        [
-            {
-                "note": "1°",
-                "lyric": "dan"
-            },
-            {
-                "note": "2°",
-                "lyric": "ku"
-            },
-            {
-                "note": "(3°-5)",
-                "lyric": "a"
-            },
-            {
-                "note": "3",
-                "lyric": ""
-            },
-            {
-                "note": "2°",
-                "lyric": "kan"
-            },
-            {
-                "note": "2°",
-                "lyric": "mem"
-            },
-            {
-                "note": "1°",
-                "lyric": "be"
-            },
-            {
-                "note": "2°",
-                "lyric": "ri"
-            },
-            {
-                "note": "2",
-                "lyric": ""
-            },
-            {
-                "note": "1°",
-                "lyric": "kan"
-            },
-            {
-                "note": "1°",
-                "lyric": "yang"
-            },
-            {
-                "note": "7",
-                "lyric": ""
-            },
-            {
-                "note": "(1°-3)",
-                "lyric": "ter"
-            },
-            {
-                "note": "7",
-                "lyric": "ba"
-            },
-            {
-                "note": "6",
-                "lyric": "ik"
-            },
-            {
-                "note": "5",
-                "lyric": "un"
-            },
-            {
-                "note": "6",
-                "lyric": "tuk"
-            },
-            {
-                "note": "(1-3)",
-                "lyric": "mu"
-            }
-        ],
-        [
-            {
-                "note": "5°(1-3)",
-                "lyric": ""
-            },
-            {
-                "note": "2°(2-4)",
-                "lyric": ""
-            },
-            {
-                "note": "3°",
-                "lyric": ""
-            },
-            {
-                "note": "(1~5)",
-                "lyric": ""
-            }
-        ]
+  "title": "Lesung Pipi - Els Kalimba",
+  "lines": [
+    [
+      {
+        "note": "1°°",
+        "lyric": "tat"
+      },
+      {
+        "note": "7°",
+        "lyric": "ka"
+      },
+      {
+        "note": "5°",
+        "lyric": "la"
+      },
+      {
+        "note": "1",
+        "lyric": ""
+      },
+      {
+        "note": "3°",
+        "lyric": "men"
+      },
+      {
+        "note": "4°",
+        "lyric": "ta"
+      },
+      {
+        "note": "5°",
+        "lyric": "ri"
+      },
+      {
+        "note": "5",
+        "lyric": ""
+      },
+      {
+        "note": "4°",
+        "lyric": "ter"
+      },
+      {
+        "note": "3°",
+        "lyric": "be"
+      },
+      {
+        "note": "4°",
+        "lyric": "nang"
+      },
+      {
+        "note": "1",
+        "lyric": ""
+      },
+      {
+        "note": "5°",
+        "lyric": "di"
+      },
+      {
+        "note": "6°",
+        "lyric": "u"
+      },
+      {
+        "note": "5",
+        "lyric": ""
+      },
+      {
+        "note": "5°",
+        "lyric": "fuk"
+      },
+      {
+        "note": "2°",
+        "lyric": "ba"
+      },
+      {
+        "note": "3",
+        "lyric": ""
+      },
+      {
+        "note": "1°",
+        "lyric": "rat"
+      }
+    ],
+    [
+      {
+        "note": "1°°",
+        "lyric": "di"
+      },
+      {
+        "note": "7°",
+        "lyric": "sa"
+      },
+      {
+        "note": "5°",
+        "lyric": "at"
+      },
+      {
+        "note": "1",
+        "lyric": ""
+      },
+      {
+        "note": "3°",
+        "lyric": "i"
+      },
+      {
+        "note": "4°",
+        "lyric": "tu"
+      },
+      {
+        "note": "5°",
+        "lyric": "lah"
+      },
+      {
+        "note": "5",
+        "lyric": ""
+      },
+      {
+        "note": "4°",
+        "lyric": "di"
+      },
+      {
+        "note": "3°",
+        "lyric": "ngin"
+      },
+      {
+        "note": "4°",
+        "lyric": "rin"
+      },
+      {
+        "note": "1",
+        "lyric": ""
+      },
+      {
+        "note": "5°",
+        "lyric": "du"
+      },
+      {
+        "note": "6°",
+        "lyric": "se"
+      },
+      {
+        "note": "5",
+        "lyric": ""
+      },
+      {
+        "note": "5°",
+        "lyric": "li"
+      },
+      {
+        "note": "2°",
+        "lyric": "mu"
+      },
+      {
+        "note": "3",
+        "lyric": ""
+      },
+      {
+        "note": "1°",
+        "lyric": "ti"
+      }
+    ],
+    [
+      {
+        "note": "1°",
+        "lyric": "ke"
+      },
+      {
+        "note": "2°",
+        "lyric": "in"
+      },
+      {
+        "note": "3°",
+        "lyric": "da"
+      },
+      {
+        "note": "5",
+        "lyric": ""
+      },
+      {
+        "note": "5°",
+        "lyric": ""
+      },
+      {
+        "note": "2°",
+        "lyric": ""
+      },
+      {
+        "note": "1°",
+        "lyric": "han"
+      },
+      {
+        "note": "1°",
+        "lyric": "se"
+      },
+      {
+        "note": "5°",
+        "lyric": "nyu"
+      },
+      {
+        "note": "(4°-6)",
+        "lyric": "man"
+      },
+      {
+        "note": "3°",
+        "lyric": "da"
+      },
+      {
+        "note": "2°",
+        "lyric": "ri"
+      },
+      {
+        "note": "1°",
+        "lyric": "le"
+      },
+      {
+        "note": "5°",
+        "lyric": "sung"
+      },
+      {
+        "note": "5",
+        "lyric": ""
+      },
+      {
+        "note": "4°",
+        "lyric": "pi"
+      },
+      {
+        "note": "3°",
+        "lyric": "pi"
+      },
+      {
+        "note": "2°",
+        "lyric": "i"
+      },
+      {
+        "note": "(6-1°)",
+        "lyric": "tu"
+      }
+    ],
+    [
+      {
+        "note": "1°",
+        "lyric": "me"
+      },
+      {
+        "note": "2°",
+        "lyric": "nik"
+      },
+      {
+        "note": "3°",
+        "lyric": "ma"
+      },
+      {
+        "note": "5",
+        "lyric": "ti"
+      },
+      {
+        "note": "4°",
+        "lyric": "i"
+      },
+      {
+        "note": "3°",
+        "lyric": "ma"
+      },
+      {
+        "note": "2°",
+        "lyric": "ji"
+      },
+      {
+        "note": "2",
+        "lyric": ""
+      },
+      {
+        "note": "1°",
+        "lyric": "ber"
+      },
+      {
+        "note": "7",
+        "lyric": "sa"
+      },
+      {
+        "note": "1°",
+        "lyric": "ma"
+      },
+      {
+        "note": "(5°-4)",
+        "lyric": "mu"
+      }
+    ],
+    [
+      {
+        "note": "2°°",
+        "lyric": ""
+      },
+      {
+        "note": "(1°°-6)",
+        "lyric": ""
+      },
+      {
+        "note": "5°",
+        "lyric": ""
+      },
+      {
+        "note": "4°",
+        "lyric": ""
+      },
+      {
+        "note": "(1°-1)",
+        "lyric": ""
+      }
+    ],
+    [
+      {
+        "note": "1°",
+        "lyric": "ma"
+      },
+      {
+        "note": "1°",
+        "lyric": "ka"
+      },
+      {
+        "note": "1°(3-5)",
+        "lyric": "te"
+      },
+      {
+        "note": "(3°-5)",
+        "lyric": "ri"
+      },
+      {
+        "note": "4°",
+        "lyric": "ma"
+      },
+      {
+        "note": "3°",
+        "lyric": "lah"
+      },
+      {
+        "note": "2°",
+        "lyric": "di"
+      },
+      {
+        "note": "3°",
+        "lyric": "ti"
+      },
+      {
+        "note": "(4~1°)",
+        "lyric": "ku"
+      },
+      {
+        "note": "4",
+        "lyric": ""
+      }
+    ],
+    [
+      {
+        "note": "1°",
+        "lyric": "ki"
+      },
+      {
+        "note": "2°",
+        "lyric": "ta"
+      },
+      {
+        "note": "(3°-5)",
+        "lyric": "a"
+      },
+      {
+        "note": "3",
+        "lyric": ""
+      },
+      {
+        "note": "2°",
+        "lyric": "kan"
+      },
+      {
+        "note": "2°",
+        "lyric": "ba"
+      },
+      {
+        "note": "1°",
+        "lyric": "ha"
+      },
+      {
+        "note": "2°",
+        "lyric": "gi"
+      },
+      {
+        "note": "2",
+        "lyric": ""
+      },
+      {
+        "note": "1°",
+        "lyric": "a"
+      },
+      {
+        "note": "1°",
+        "lyric": ""
+      },
+      {
+        "note": "7",
+        "lyric": "se"
+      },
+      {
+        "note": "7",
+        "lyric": "la"
+      },
+      {
+        "note": "1",
+        "lyric": ""
+      },
+      {
+        "note": "1°",
+        "lyric": "ma"
+      },
+      {
+        "note": "1°",
+        "lyric": "nya"
+      },
+      {
+        "note": "5",
+        "lyric": ""
+      }
+    ],
+    [
+      {
+        "note": "1°",
+        "lyric": "ku"
+      },
+      {
+        "note": "1°",
+        "lyric": "ber"
+      },
+      {
+        "note": "1°(3-5)",
+        "lyric": "jam"
+      },
+      {
+        "note": "(3°-5)",
+        "lyric": "ji"
+      },
+      {
+        "note": "4°",
+        "lyric": "ja"
+      },
+      {
+        "note": "3°",
+        "lyric": "di"
+      },
+      {
+        "note": "2°",
+        "lyric": "su"
+      },
+      {
+        "note": "7",
+        "lyric": "a"
+      },
+      {
+        "note": "(1°-3)",
+        "lyric": "mi"
+      },
+      {
+        "note": "7",
+        "lyric": ""
+      },
+      {
+        "note": "6",
+        "lyric": "mu"
+      },
+      {
+        "note": "4",
+        "lyric": ""
+      }
+    ],
+    [
+      {
+        "note": "1°",
+        "lyric": "dan"
+      },
+      {
+        "note": "2°",
+        "lyric": "ku"
+      },
+      {
+        "note": "(3°-5)",
+        "lyric": "a"
+      },
+      {
+        "note": "3",
+        "lyric": ""
+      },
+      {
+        "note": "2°",
+        "lyric": "kan"
+      },
+      {
+        "note": "2°",
+        "lyric": "mem"
+      },
+      {
+        "note": "1°",
+        "lyric": "be"
+      },
+      {
+        "note": "2°",
+        "lyric": "ri"
+      },
+      {
+        "note": "2",
+        "lyric": ""
+      },
+      {
+        "note": "1°",
+        "lyric": "kan"
+      },
+      {
+        "note": "1°",
+        "lyric": "yang"
+      },
+      {
+        "note": "7",
+        "lyric": ""
+      },
+      {
+        "note": "(1°-3)",
+        "lyric": "ter"
+      },
+      {
+        "note": "7",
+        "lyric": "ba"
+      },
+      {
+        "note": "6",
+        "lyric": "ik"
+      },
+      {
+        "note": "5",
+        "lyric": "un"
+      },
+      {
+        "note": "6",
+        "lyric": "tuk"
+      },
+      {
+        "note": "(1-3)",
+        "lyric": "mu"
+      }
+    ],
+    [
+      {
+        "note": "5°(1-3)",
+        "lyric": ""
+      },
+      {
+        "note": "2°(2-4)",
+        "lyric": ""
+      },
+      {
+        "note": "3°",
+        "lyric": ""
+      },
+      {
+        "note": "(1~5)",
+        "lyric": ""
+      }
     ]
+  ],
+  "refrensi": "https://www.youtube.com/watch?v=QpcrtZfab60&ab_channel=ElsKalimba",
+  "status": "publish",
+  "updated_at": "2025-06-09T00:30:00+00:00",
+  "created_at": "2025-06-09T00:28:31+00:00"
 }
