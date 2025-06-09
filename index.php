@@ -133,7 +133,7 @@
                                 <td class="p-4 font-semibold whitespace-nowrap">
                                     <a href="viewer.php?song=<?= str_replace([".json", "tab_"], ["", ""], urlencode($song['filename'])) ?>"><?= $song['title'] ?></a>
                                     <?php if ($song['status'] === 'draf'): ?>
-                                        <span class="ml-2 text-xs font-semibold bg-gray-200 text-gray-700 px-2 py-1 rounded-full align-middle">Draf</span>
+                                        <span class="ml-2 text-xs font-semibold bg-gray-200 text-gray-700 dark:bg-slate-900 dark:text-slate-400 px-2 py-1 rounded-full align-middle">Draf</span>
                                     <?php endif; ?>
                                 </td>
                                 <td class="p-4 flex justify-center items-center gap-4 text-slate-600 dark:text-slate-400">
