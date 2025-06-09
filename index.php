@@ -130,11 +130,12 @@
                     <?php else: ?>
                         <?php foreach ($songs_to_display as $song): ?>
                             <tr class="border-t border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-gray-200 dark:hover:bg-slate-700/50">
-                                <td class="p-4 font-semibold whitespace-nowrap preview-btn" data-song-content='<?= $song['content'] ?>'><?= $song['title'] ?></td>
+                                <td class="p-4 font-semibold whitespace-nowrap"><a href="viewer.php?song=<?= str_replace([".json", "tab_"], ["", ""], urlencode($song['filename'])) ?>"><?= $song['title'] ?></a></td>
                                 <td class="p-4 flex justify-center items-center gap-4 text-slate-600 dark:text-slate-400">
                                     <a href="index.php?action=backup_song&file=<?= urlencode($song['filename']) ?>" class="text-transparent backup-btn whitespace-nowrap">
                                         <i class="fas fa-save mr-1"></i>Backup
                                     </a>
+                                    <div class="whitespace-nowrap preview-btn" data-song-content='<?= $song['content'] ?>'><i class="fa-solid fa-eye"></i> Preview</div>
                                     <a href="index.php?action=restore_song&file=<?= urlencode($song['filename']) ?>" onclick="return confirm('PERINGATAN: Lagu ini akan ditimpa dengan versi backup terakhir. Lanjutkan?')" class="hover:text-orange-500 dark:hover:text-orange-400 whitespace-nowrap">
                                         <i class="fas fa-undo mr-1"></i>Restore
                                     </a>

@@ -1,0 +1,58 @@
+body {
+  /* background-color dipindahkan ke kelas Tailwind di tag <body> */
+  font-family: "Georgia", "Times New Roman", serif;
+}
+
+.line-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+  font-family: "Courier New", monospace;
+}
+
+.slot-preview {
+  border-radius: 4px;
+  padding: 4px 6px;
+  text-align: center;
+  min-width: 40px;
+}
+
+.note-preview {
+  display: block;
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #1e3a8a;
+  /* Biru tua untuk light mode */
+}
+
+.lyric-preview {
+  display: block;
+  font-size: 0.9em;
+  color: #4b5563;
+  /* Abu-abu tua untuk light mode */
+  margin-top: 2px;
+}
+
+/* PENAMBAHAN: Aturan khusus untuk Dark Mode */
+html.dark .note-preview {
+  color: #93c5fd;
+  /* Biru terang (blue-300) */
+}
+
+html.dark .lyric-preview {
+  color: #9ca3af;
+  /* Abu-abu terang (gray-400) */
+}
+
+html.dark #theme-toggle-light-icon {
+  display: none;
+}
+
+#theme-toggle-dark-icon {
+  display: none;
+}
+
+html.dark #theme-toggle-dark-icon {
+  display: block;
+}
