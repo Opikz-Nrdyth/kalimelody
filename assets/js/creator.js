@@ -1,4 +1,5 @@
 window.onload = function () {
+  let copiedLine = null;
   const dom = {
     title: document.getElementById("title"),
     refrensi: document.getElementById("refrensi"),
@@ -100,19 +101,22 @@ window.onload = function () {
     tabData.lines.forEach((line, lineIndex) => {
       const lineDiv = document.createElement("div");
       lineDiv.className = "line-wrapper flex items-center space-x-2 mb-3";
-      const slotsDiv = document.createElement("div");
-      slotsDiv.className = "flex items-center space-x-2";
+
+      const slotsAndInsertersDiv = document.createElement("div");
+      slotsAndInsertersDiv.className = "flex items-center";
       line.forEach((slot, slotIndex) => {
         const slotDiv = document.createElement("div");
         slotDiv.className = "relative flex flex-col space-y-1 pt-3";
+
         const deleteBtn = document.createElement("button");
         deleteBtn.innerHTML =
           '<i class="fas fa-minus-circle text-red-400 hover:text-red-600"></i>';
         deleteBtn.className =
-          "delete-slot-btn absolute top-0 left-0 text-lg leading-none";
+          "delete-slot-btn absolute top-0 left-1/2 -translate-x-1/2 text-lg leading-none";
         deleteBtn.dataset.line = lineIndex;
         deleteBtn.dataset.slot = slotIndex;
         slotDiv.appendChild(deleteBtn);
+
         const noteInput = document.createElement("input");
         noteInput.type = "text";
         noteInput.value = slot.note;
@@ -123,6 +127,7 @@ window.onload = function () {
         noteInput.dataset.type = "note";
         noteInput.readOnly = true;
         slotDiv.appendChild(noteInput);
+
         const lyricInput = document.createElement("input");
         lyricInput.type = "text";
         lyricInput.value = slot.lyric;
@@ -133,17 +138,29 @@ window.onload = function () {
         lyricInput.dataset.type = "lyric";
         lyricInput.readOnly = window.screen.width < 768;
         slotDiv.appendChild(lyricInput);
-        slotsDiv.appendChild(slotDiv);
+
+        slotsAndInsertersDiv.appendChild(slotDiv);
+
+        // tombol sisip (+) setelah setiap not
+        const insertBtn = document.createElement("button");
+        insertBtn.innerHTML = '<i class="fas fa-plus"></i>';
+        insertBtn.className =
+          "insert-slot-btn bg-green-100 text-green-600 w-4 h-4 rounded-full hover:bg-green-200 flex-shrink-0 mx-1 text-xs";
+        insertBtn.title = "Sisipkan not baru di sini";
+        insertBtn.dataset.line = lineIndex;
+        insertBtn.dataset.slot = slotIndex + 1; // Akan menyisipkan di posisi setelah slot ini
+        slotsAndInsertersDiv.appendChild(insertBtn);
       });
-      lineDiv.appendChild(slotsDiv);
-      const addSlotBtn = document.createElement("button");
-      addSlotBtn.innerHTML = '<i class="fas fa-plus"></i>';
-      addSlotBtn.className =
-        "add-slot-btn bg-green-100 text-green-600 w-8 h-8 rounded-full hover:bg-green-200 flex-shrink-0";
-      addSlotBtn.dataset.line = lineIndex;
-      lineDiv.appendChild(addSlotBtn);
+
+      lineDiv.appendChild(slotsAndInsertersDiv);
+
+      const lineActionsDiv = document.createElement("div");
+      lineActionsDiv.className = "line-actions flex items-center gap-2 pl-4";
+      lineDiv.appendChild(lineActionsDiv);
+
       dom.linesContainer.appendChild(lineDiv);
     });
+    renderLineActions();
     if (focusTarget) {
       const selector = `input[data-line="${focusTarget.line}"][data-slot="${focusTarget.slot}"][data-type="note"]`;
       const inputToFocus = dom.linesContainer.querySelector(selector);
@@ -155,6 +172,35 @@ window.onload = function () {
           inline: "center",
         });
       }
+    }
+  }
+
+  function renderLineActions() {
+    const allLineDivs = dom.linesContainer.querySelectorAll(".line-wrapper");
+    allLineDivs.forEach((lineDiv, lineIndex) => {
+      const actionsContainer = lineDiv.querySelector(".line-actions");
+      actionsContainer.innerHTML = ""; // Kosongkan dulu
+
+      // Tombol Copy
+      const copyBtn = document.createElement("button");
+      copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+      copyBtn.title = "Salin Baris";
+      copyBtn.className =
+        "line-action-btn copy-line-btn bg-yellow-100 text-yellow-800 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-200";
+      copyBtn.dataset.line = lineIndex;
+      actionsContainer.appendChild(copyBtn);
+    });
+
+    // Tombol Paste di paling bawah (untuk menambah baris baru dari hasil salinan)
+    if (copiedLine) {
+      const bottomPasteBtnWrapper = document.createElement("div");
+      bottomPasteBtnWrapper.className = "flex justify-center mt-2";
+      bottomPasteBtnWrapper.innerHTML = `
+            <button id="paste-as-new-line-btn" class="bg-yellow-100 text-yellow-800 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-200">
+                <i class="fas fa-paste mr-2"></i>Tempel sebagai Baris Baru
+            </button>
+        `;
+      dom.linesContainer.appendChild(bottomPasteBtnWrapper);
     }
   }
 
@@ -326,19 +372,14 @@ window.onload = function () {
   });
 
   dom.linesContainer.addEventListener("click", (e) => {
-    const addSlotBtn = e.target.closest(".add-slot-btn");
-    if (addSlotBtn) {
-      const lineIndex = parseInt(addSlotBtn.dataset.line);
-      const newSlotIndex = tabData.lines[lineIndex].length;
-      tabData.lines[lineIndex].push({
-        note: "",
-        lyric: "",
-      });
-      renderNotationGrid({
-        line: lineIndex,
-        slot: newSlotIndex,
-      });
+    const insertBtn = e.target.closest(".insert-slot-btn");
+    if (insertBtn) {
+      const lineIndex = parseInt(insertBtn.dataset.line);
+      const slotIndex = parseInt(insertBtn.dataset.slot);
+      tabData.lines[lineIndex].splice(slotIndex, 0, { note: "", lyric: "" });
+      renderNotationGrid();
     }
+
     const deleteSlotBtn = e.target.closest(".delete-slot-btn");
     if (deleteSlotBtn) {
       const { line, slot } = deleteSlotBtn.dataset;
@@ -351,6 +392,22 @@ window.onload = function () {
             lyric: "",
           },
         ]);
+      renderNotationGrid();
+    }
+
+    const copyBtn = e.target.closest(".copy-line-btn");
+    if (copyBtn) {
+      const lineIndex = parseInt(copyBtn.dataset.line);
+      // Salin data baris (gunakan structuredClone untuk salinan sejati)
+      copiedLine = structuredClone(tabData.lines[lineIndex]);
+      showNotification("Baris berhasil disalin!", false);
+      renderNotationGrid(); // Render ulang untuk menampilkan tombol Paste
+    }
+
+    const pasteAsNewLineBtn = e.target.closest("#paste-as-new-line-btn");
+    if (pasteAsNewLineBtn && copiedLine) {
+      tabData.lines.push(structuredClone(copiedLine));
+      copiedLine = null;
       renderNotationGrid();
     }
   });
