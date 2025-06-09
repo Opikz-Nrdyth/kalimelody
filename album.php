@@ -44,7 +44,7 @@
                     <i class="fas fa-filter mr-2"></i>Filter
                 </button>
                 <button id="export-pdf-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-sm">
-                    <i class="fas fa-file-pdf mr-2"></i>Ekspor ke PDF
+                    <i class="fas fa-file-pdf mr-2"></i>Cetak E-Book
                 </button>
             </div>
         </div>
@@ -94,7 +94,7 @@
             </div>
             <div class="flex justify-end p-4 border-t bg-slate-50 gap-3">
                 <button id="cancel-export-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg">Batal</button>
-                <button id="continue-export-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Lanjutkan & Ekspor</button>
+                <button id="continue-export-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Cetak E-Book</button>
             </div>
         </div>
     </div>
