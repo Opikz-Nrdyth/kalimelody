@@ -309,18 +309,18 @@ window.onload = function () {
       doc.text(songTitle, pageWidth / 2, y, {
         align: "center",
       });
-      y += titleHeight / 2 + 2; // Beri sedikit jarak
+      y += titleHeight / 2; // Beri sedikit jarak
 
       // --- TAMBAHKAN BLOK IF INI UNTUK MENCETAK REFERENSI ---
       if (songRefrensi.trim() !== "") {
         doc
           .setFont("helvetica", "italic")
-          .setFontSize(config.noteSize - 1)
+          .setFontSize(config.noteSize - 3)
           .setTextColor(100);
         doc.text(`${songRefrensi}`, pageWidth / 2, y, {
           align: "center",
         });
-        y += config.noteSize / 2;
+        y += config.noteSize / 2 + 2;
       }
       song.lines.forEach((line) => {
         const lineHeight = config.lineGap;
@@ -404,7 +404,6 @@ window.onload = function () {
             title: songTitle,
             page: doc.internal.getNumberOfPages(),
           });
-          const songRefrensi = song.refrensi || "";
           doc
             .setFont("helvetica", "bold")
             .setFontSize(config.songTitleSize)
@@ -412,17 +411,18 @@ window.onload = function () {
           doc.text(songTitle, pageWidth / 2, y, {
             align: "center",
           });
-          y += titleHeight / 2 + 2;
+          y += titleHeight / 2;
 
+          const songRefrensi = song.refrensi || "";
           if (songRefrensi.trim() !== "") {
             doc
               .setFont("helvetica", "italic")
-              .setFontSize(config.noteSize - 1)
+              .setFontSize(config.noteSize - 3)
               .setTextColor(100);
             doc.text(`${songRefrensi}`, pageWidth / 2, y, {
               align: "center",
             });
-            y += config.noteSize / 2;
+            y += config.noteSize / 2 + 2;
           }
           song.lines.forEach((line) => {
             const lineHeight = config.lineGap;
