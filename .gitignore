@@ -1,3 +1,4 @@
 update.ps1
 .git
 backups/*
+tailwind.config.js

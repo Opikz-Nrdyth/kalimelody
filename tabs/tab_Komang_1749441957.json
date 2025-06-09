@@ -1,9 +1,9 @@
 {
-    "title": "Komang - Tantri Silvian",
+    "title": "Komang - Raim Laode",
     "refrensi": "https:\/\/www.youtube.com\/watch?v=bkKPxokrxRI&ab_channel=TantriSilvian",
     "status": "draf",
     "created_at": "2025-06-09T04:05:57+00:00",
-    "updated_at": "2025-06-09T04:13:10+00:00",
+    "updated_at": "2025-06-09T08:54:35+00:00",
     "lines": [
         [
             {
@@ -145,6 +145,688 @@
             {
                 "note": "2°-4",
                 "lyric": "tu"
+            }
+        ],
+        [
+            {
+                "note": "1",
+                "lyric": ""
+            },
+            {
+                "note": "3°",
+                "lyric": "i"
+            },
+            {
+                "note": "3°-3",
+                "lyric": "ngin"
+            },
+            {
+                "note": "1°",
+                "lyric": "ku"
+            },
+            {
+                "note": "2°-5",
+                "lyric": "ung"
+            },
+            {
+                "note": "3°",
+                "lyric": "kap"
+            },
+            {
+                "note": "2°",
+                "lyric": "kan"
+            },
+            {
+                "note": "",
+                "lyric": ""
+            },
+            {
+                "note": "1°",
+                "lyric": "rin"
+            },
+            {
+                "note": "2°",
+                "lyric": "du"
+            },
+            {
+                "note": "2",
+                "lyric": ""
+            },
+            {
+                "note": "5",
+                "lyric": ""
+            },
+            {
+                "note": "7",
+                "lyric": "ku"
+            }
+        ],
+        [
+            {
+                "note": "2°",
+                "lyric": "le"
+            },
+            {
+                "note": "3°",
+                "lyric": "wa"
+            },
+            {
+                "note": "(7-2°-4°)",
+                "lyric": ""
+            },
+            {
+                "note": "3°",
+                "lyric": "ka"
+            },
+            {
+                "note": "2°",
+                "lyric": "ta"
+            },
+            {
+                "note": "",
+                "lyric": ""
+            },
+            {
+                "note": "1°",
+                "lyric": "in"
+            },
+            {
+                "note": "2°",
+                "lyric": "dah"
+            },
+            {
+                "note": "2",
+                "lyric": ""
+            },
+            {
+                "note": "3°",
+                "lyric": ""
+            },
+            {
+                "note": "2°",
+                "lyric": ""
+            },
+            {
+                "note": "4",
+                "lyric": ""
+            },
+            {
+                "note": "1°",
+                "lyric": ""
+            },
+            {
+                "note": "6",
+                "lyric": ""
+            }
+        ],
+        [
+            {
+                "note": "5",
+                "lyric": "tak"
+            },
+            {
+                "note": "6",
+                "lyric": "cu"
+            },
+            {
+                "note": "1°",
+                "lyric": "kup"
+            },
+            {
+                "note": "3°-1",
+                "lyric": "un"
+            },
+            {
+                "note": "1°",
+                "lyric": "tuk"
+            },
+            {
+                "note": "5",
+                "lyric": "di"
+            },
+            {
+                "note": "2°",
+                "lyric": "ri"
+            },
+            {
+                "note": "2°-4",
+                "lyric": "mu"
+            }
+        ],
+        [
+            {
+                "note": "3°",
+                "lyric": "se"
+            },
+            {
+                "note": "2°",
+                "lyric": "bab"
+            },
+            {
+                "note": "1°",
+                "lyric": "kau"
+            },
+            {
+                "note": "1°(1-3)",
+                "lyric": "ter"
+            },
+            {
+                "note": "2°",
+                "lyric": "la"
+            },
+            {
+                "note": "3°",
+                "lyric": "lu"
+            },
+            {
+                "note": "6",
+                "lyric": ""
+            },
+            {
+                "note": "",
+                "lyric": ""
+            },
+            {
+                "note": "1°°",
+                "lyric": "in"
+            },
+            {
+                "note": "7°-(5~2°)",
+                "lyric": "dah"
+            },
+            {
+                "note": "5°",
+                "lyric": "da"
+            },
+            {
+                "note": "5°",
+                "lyric": "ri"
+            }
+        ],
+        [
+            {
+                "note": "1°",
+                "lyric": "se"
+            },
+            {
+                "note": "6°-1",
+                "lyric": "ke"
+            },
+            {
+                "note": "5°",
+                "lyric": "dar"
+            },
+            {
+                "note": "5°-4",
+                "lyric": "ka"
+            },
+            {
+                "note": "1°",
+                "lyric": "ta"
+            },
+            {
+                "note": "6",
+                "lyric": ""
+            }
+        ],
+        [
+            {
+                "note": "3°-3",
+                "lyric": "du"
+            },
+            {
+                "note": "2°",
+                "lyric": "ni"
+            },
+            {
+                "note": "1°",
+                "lyric": "a"
+            },
+            {
+                "note": "1°-(1-3)",
+                "lyric": "ber"
+            },
+            {
+                "note": "",
+                "lyric": ""
+            },
+            {
+                "note": "2°",
+                "lyric": "hen"
+            },
+            {
+                "note": "3°",
+                "lyric": "ti"
+            },
+            {
+                "note": "6",
+                "lyric": ""
+            },
+            {
+                "note": "",
+                "lyric": ""
+            },
+            {
+                "note": "4°",
+                "lyric": "se"
+            },
+            {
+                "note": "3°",
+                "lyric": "je"
+            },
+            {
+                "note": "2",
+                "lyric": ""
+            },
+            {
+                "note": "2°",
+                "lyric": "nak"
+            }
+        ],
+        [
+            {
+                "note": "2°",
+                "lyric": "me"
+            },
+            {
+                "note": "4",
+                "lyric": ""
+            },
+            {
+                "note": "1°",
+                "lyric": "nik"
+            },
+            {
+                "note": "2°-1",
+                "lyric": "ma"
+            },
+            {
+                "note": "3°",
+                "lyric": "ti"
+            },
+            {
+                "note": "2°",
+                "lyric": "in"
+            },
+            {
+                "note": "4",
+                "lyric": ""
+            },
+            {
+                "note": "1°",
+                "lyric": "dah"
+            },
+            {
+                "note": "2°",
+                "lyric": "mu"
+            }
+        ],
+        [
+            {
+                "note": "2",
+                "lyric": ""
+            },
+            {
+                "note": "5",
+                "lyric": ""
+            },
+            {
+                "note": "7",
+                "lyric": ""
+            },
+            {
+                "note": "2°",
+                "lyric": ""
+            },
+            {
+                "note": "(3°-5°)",
+                "lyric": ""
+            }
+        ],
+        [
+            {
+                "note": "5°-5",
+                "lyric": "dan"
+            },
+            {
+                "note": "4°",
+                "lyric": "a"
+            },
+            {
+                "note": "3°-1",
+                "lyric": "pa"
+            },
+            {
+                "note": "4°",
+                "lyric": "bi"
+            },
+            {
+                "note": "5°",
+                "lyric": "la"
+            },
+            {
+                "note": "3",
+                "lyric": ""
+            },
+            {
+                "note": "",
+                "lyric": ""
+            },
+            {
+                "note": "4°",
+                "lyric": "tak"
+            },
+            {
+                "note": "3°",
+                "lyric": "ber"
+            },
+            {
+                "note": "3°-2",
+                "lyric": "sa"
+            },
+            {
+                "note": "4°",
+                "lyric": "ma"
+            },
+            {
+                "note": "5°",
+                "lyric": "mu"
+            },
+            {
+                "note": "5",
+                "lyric": ""
+            }
+        ],
+        [
+            {
+                "note": "3°",
+                "lyric": "ku"
+            },
+            {
+                "note": "3°-2",
+                "lyric": "pas"
+            },
+            {
+                "note": "4°",
+                "lyric": "ti"
+            },
+            {
+                "note": "5°",
+                "lyric": "kan"
+            },
+            {
+                "note": "5",
+                "lyric": ""
+            },
+            {
+                "note": "",
+                "lyric": ""
+            },
+            {
+                "note": "3°",
+                "lyric": "ku"
+            },
+            {
+                "note": "3°-7",
+                "lyric": "ja"
+            },
+            {
+                "note": "4°",
+                "lyric": "la"
+            },
+            {
+                "note": "5°",
+                "lyric": "ni"
+            },
+            {
+                "note": "5",
+                "lyric": ""
+            }
+        ],
+        [
+            {
+                "note": "6°",
+                "lyric": "du"
+            },
+            {
+                "note": "5°",
+                "lyric": "ni"
+            },
+            {
+                "note": "2",
+                "lyric": ""
+            },
+            {
+                "note": "6°",
+                "lyric": "a"
+            },
+            {
+                "note": "4",
+                "lyric": ""
+            },
+            {
+                "note": "6",
+                "lyric": ""
+            },
+            {
+                "note": "",
+                "lyric": ""
+            },
+            {
+                "note": "5°",
+                "lyric": ""
+            },
+            {
+                "note": "6°",
+                "lyric": ""
+            },
+            {
+                "note": "3°",
+                "lyric": ""
+            },
+            {
+                "note": "2°",
+                "lyric": ""
+            }
+        ],
+        [
+            {
+                "note": "1°",
+                "lyric": "tak"
+            },
+            {
+                "note": "1°",
+                "lyric": "se"
+            },
+            {
+                "note": "5°-1",
+                "lyric": "in"
+            },
+            {
+                "note": "4°",
+                "lyric": "dah"
+            },
+            {
+                "note": "1°-4",
+                "lyric": "ke"
+            },
+            {
+                "note": "",
+                "lyric": ""
+            },
+            {
+                "note": "5°",
+                "lyric": "ke"
+            },
+            {
+                "note": "4°-1",
+                "lyric": "ma"
+            }
+        ],
+        [
+            {
+                "note": "4°",
+                "lyric": "se"
+            },
+            {
+                "note": "3°-1",
+                "lyric": "der"
+            },
+            {
+                "note": "4°",
+                "lyric": "ha"
+            },
+            {
+                "note": "5°",
+                "lyric": "na"
+            },
+            {
+                "note": "3",
+                "lyric": ""
+            },
+            {
+                "note": "",
+                "lyric": ""
+            },
+            {
+                "note": "4°",
+                "lyric": "ter"
+            },
+            {
+                "note": "3°-2",
+                "lyric": "ta"
+            },
+            {
+                "note": "4°",
+                "lyric": "wa"
+            },
+            {
+                "note": "5°",
+                "lyric": "mu"
+            },
+            {
+                "note": "5",
+                "lyric": ""
+            },
+            {
+                "note": "",
+                "lyric": ""
+            },
+            {
+                "note": "1°°-1°",
+                "lyric": "su"
+            },
+            {
+                "note": "7°-2",
+                "lyric": "dah"
+            },
+            {
+                "note": "5°",
+                "lyric": "cu"
+            },
+            {
+                "note": "3°",
+                "lyric": "kup"
+            },
+            {
+                "note": "5",
+                "lyric": ""
+            }
+        ],
+        [
+            {
+                "note": "3°-7",
+                "lyric": "leng"
+            },
+            {
+                "note": "4°",
+                "lyric": "ka"
+            },
+            {
+                "note": "5°",
+                "lyric": "pi"
+            },
+            {
+                "note": "5",
+                "lyric": ""
+            },
+            {
+                "note": "",
+                "lyric": ""
+            },
+            {
+                "note": "6°",
+                "lyric": "sem"
+            },
+            {
+                "note": "6°",
+                "lyric": "pur"
+            },
+            {
+                "note": "2",
+                "lyric": ""
+            },
+            {
+                "note": "5°",
+                "lyric": "na"
+            },
+            {
+                "note": "6°",
+                "lyric": "nya"
+            },
+            {
+                "note": "4",
+                "lyric": ""
+            },
+            {
+                "note": "6",
+                "lyric": ""
+            },
+            {
+                "note": "",
+                "lyric": ""
+            },
+            {
+                "note": "5°",
+                "lyric": ""
+            },
+            {
+                "note": "6°",
+                "lyric": ""
+            },
+            {
+                "note": "3°",
+                "lyric": ""
+            },
+            {
+                "note": "2°",
+                "lyric": ""
+            }
+        ],
+        [
+            {
+                "note": "1°",
+                "lyric": "hi"
+            },
+            {
+                "note": "5°-1",
+                "lyric": "dup"
+            },
+            {
+                "note": "4°",
+                "lyric": "ber"
+            },
+            {
+                "note": "1°-4",
+                "lyric": "sa"
+            },
+            {
+                "note": "5°",
+                "lyric": "ma"
+            },
+            {
+                "note": "4°-1",
+                "lyric": "mu"
             }
         ]
     ]

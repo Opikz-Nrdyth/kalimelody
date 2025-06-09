@@ -121,7 +121,7 @@ window.onload = function () {
         noteInput.type = "text";
         noteInput.value = slot.note;
         noteInput.className =
-          "note-input w-16 h-10 text-center border border-slate-300 rounded-md focus:outline-none";
+          "note-input w-16 h-10 text-center border border-slate-300 rounded-md focus:outline-none bg-white dark:bg-slate-800";
         noteInput.dataset.line = lineIndex;
         noteInput.dataset.slot = slotIndex;
         noteInput.dataset.type = "note";
@@ -132,7 +132,7 @@ window.onload = function () {
         lyricInput.type = "text";
         lyricInput.value = slot.lyric;
         lyricInput.className =
-          "lyric-input w-16 h-8 text-center text-sm border border-slate-300 rounded-md focus:outline-none";
+          "lyric-input w-16 h-8 text-center text-sm border border-slate-300 rounded-md focus:outline-none bg-white dark:bg-slate-800";
         lyricInput.dataset.line = lineIndex;
         lyricInput.dataset.slot = slotIndex;
         lyricInput.dataset.type = "lyric";
@@ -146,7 +146,7 @@ window.onload = function () {
           const insertBtn = document.createElement("button");
           insertBtn.innerHTML = '<i class="fas fa-plus"></i>';
           insertBtn.className =
-            "insert-slot-btn bg-green-100 text-green-600 w-4 h-4 rounded-full hover:bg-green-200 flex-shrink-0 mx-1 text-xs";
+            "insert-slot-btn bg-green-100 text-green-600 dark:text-green-100 dark:bg-green-600 w-4 h-4 rounded-full hover:bg-green-200 dark:hover:bg-green-900 flex-shrink-0 mx-1 text-xs";
           insertBtn.title = "Sisipkan not baru di sini";
           insertBtn.dataset.line = lineIndex;
           insertBtn.dataset.slot = slotIndex + 1; // Akan menyisipkan di posisi setelah slot ini
@@ -188,7 +188,7 @@ window.onload = function () {
       addSlotBtn.innerHTML = '<i class="fas fa-plus-circle"></i>';
       addSlotBtn.title = "Tambah Not di Ujung";
       addSlotBtn.className =
-        "line-action-btn add-slot-btn bg-green-100 text-green-800 font-semibold w-8 h-8 rounded-full hover:bg-green-200";
+        "line-action-btn add-slot-btn bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100 font-semibold w-8 h-8 rounded-full hover:bg-green-200 dark:hover:bg-green-900";
       addSlotBtn.dataset.line = lineIndex;
       actionsContainer.appendChild(addSlotBtn);
 
@@ -197,7 +197,7 @@ window.onload = function () {
       copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
       copyBtn.title = "Salin Baris";
       copyBtn.className =
-        "line-action-btn copy-line-btn bg-yellow-100 text-yellow-800 font-semibold w-8 h-8 rounded-full hover:bg-yellow-200";
+        "line-action-btn copy-line-btn bg-yellow-100 text-yellow-800 dark:text-yellow-100 dark:bg-yellow-800 font-semibold w-8 h-8 rounded-full hover:bg-yellow-200 dark:hover:bg-yellow-900";
       copyBtn.dataset.line = lineIndex;
       actionsContainer.appendChild(copyBtn);
     });
@@ -207,7 +207,7 @@ window.onload = function () {
       const bottomPasteBtnWrapper = document.createElement("div");
       bottomPasteBtnWrapper.className = "flex justify-center mt-2";
       bottomPasteBtnWrapper.innerHTML = `
-            <button id="paste-as-new-line-btn" class="bg-yellow-100 text-yellow-800 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-200">
+            <button id="paste-as-new-line-btn" class="bg-yellow-100 text-yellow-800 dark:text-yellow-100 dark:bg-yellow-800 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-200 dark:hover:bg-yellow-900">
                 <i class="fas fa-paste mr-2"></i>Tempel sebagai Baris Baru
             </button>
         `;
@@ -274,7 +274,9 @@ window.onload = function () {
       keyBtn.dataset.key = key;
       keyBtn.className =
         "keyboard-key h-12 rounded-lg shadow font-semibold transition transform hover:scale-105 w-full " +
-        (key === "Del" ? "bg-red-200 text-red-800" : "bg-slate-200");
+        (key === "Del"
+          ? "bg-red-200 text-red-800"
+          : "bg-slate-200 dark:bg-slate-900");
       dom.keyboardNotes.appendChild(keyBtn);
     });
 
@@ -289,7 +291,7 @@ window.onload = function () {
         keyBtn.textContent = key; // Teks awal (huruf besar)
         keyBtn.dataset.key = key;
         keyBtn.className =
-          "keyboard-key h-12 rounded-lg shadow bg-slate-200 font-semibold transition";
+          "keyboard-key h-12 rounded-lg shadow bg-slate-200 dark:bg-slate-900 font-semibold transition";
 
         if (key.length > 1) {
           // Tombol fungsi (CapsLock, Bksp, Spasi)

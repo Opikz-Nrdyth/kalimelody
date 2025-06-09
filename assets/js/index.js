@@ -30,9 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
     tabData.lines.forEach((line) => {
       let lineHTML = '<div class="line-preview">';
       line.forEach((slot) => {
-        lineHTML += `<div class="slot-preview"><span class="note-preview">${
+        lineHTML += `<div class="slot-preview"><span class="note-preview text-black dark:text-white">${
           slot.note || "&nbsp;"
-        }</span><span class="lyric-preview">${
+        }</span><span class="lyric-preview text-gray-800 dark:text-gray-500">${
           slot.lyric || "&nbsp;"
         }</span></div>`;
       });

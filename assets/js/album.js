@@ -124,14 +124,29 @@ window.onload = function () {
     dom.totalPages.textContent = pagesHTML.length;
     dom.prevBtn.disabled = currentPageIndex === 0;
     dom.nextBtn.disabled = currentPageIndex === pagesHTML.length - 1;
+    // Definisikan kelas untuk setiap state
+    const activeClasses = ["bg-blue-600", "text-white"];
+    const inactiveClasses = [
+      "bg-slate-200",
+      "text-slate-700",
+      "dark:bg-slate-700",
+      "dark:text-slate-300",
+    ];
+
     dom.pageNumbersContainer
       .querySelectorAll(".page-num-btn")
       .forEach((btn) => {
-        btn.classList.remove("bg-blue-600", "text-white");
-        btn.classList.add("bg-slate-200", "text-slate-700");
-        if (parseInt(btn.dataset.page) === currentPageIndex) {
-          btn.classList.add("bg-blue-600", "text-white");
-          btn.classList.remove("bg-slate-200", "text-slate-700");
+        // Cek apakah tombol ini adalah tombol untuk halaman yang sedang aktif
+        const isActive = parseInt(btn.dataset.page) === currentPageIndex;
+
+        if (isActive) {
+          // Jika AKTIF: hapus kelas inactive, tambahkan kelas active.
+          btn.classList.remove(...inactiveClasses);
+          btn.classList.add(...activeClasses);
+        } else {
+          // Jika TIDAK AKTIF: hapus kelas active, tambahkan kelas inactive.
+          btn.classList.remove(...activeClasses);
+          btn.classList.add(...inactiveClasses);
         }
       });
   }
@@ -186,7 +201,7 @@ window.onload = function () {
 
       pageLinks[songIndex] = pages.length;
 
-      currentPageHTML += `<div class="song-title">${songTitle}</div>`;
+      currentPageHTML += `<div class="song-title text-blue-600 dark:text-blue-400">${songTitle}</div>`;
       if (song.refrensi && song.refrensi.trim() !== "") {
         currentPageHTML += `<div class="song-refrensi">Referensi: ${song.refrensi}</div>`;
         linesOnCurrentPage += 1;
@@ -211,9 +226,9 @@ window.onload = function () {
         // Render baris notasi ke HTML
         let lineHTML = '<div class="line-preview">';
         line.forEach((slot) => {
-          lineHTML += `<div class="slot-preview"><span class="note-preview">${
+          lineHTML += `<div class="slot-preview"><span class="note-preview text-black dark:text-white">${
             slot.note || "&nbsp;"
-          }</span><span class="lyric-preview">${
+          }</span><span class="lyric-preview text-gray-800 dark:text-gray-500">${
             slot.lyric || "&nbsp;"
           }</span></div>`;
         });
@@ -246,7 +261,7 @@ window.onload = function () {
       const config = pdfConfigs[key];
       const optionDiv = document.createElement("div");
       optionDiv.className =
-        "paper-option p-4 rounded-lg cursor-pointer text-center";
+        "paper-option p-4 rounded-lg cursor-pointer text-center bg-white dark:bg-slate-700";
       optionDiv.dataset.size = key;
       if (key === "a6") {
         optionDiv.classList.add("selected");

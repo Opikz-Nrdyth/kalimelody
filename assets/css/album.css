@@ -4,8 +4,7 @@ body {
 
 #page-content-container {
   font-family: "Georgia", serif;
-  color: #334155;
-  background-color: #ffffff;
+
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border: 1px solid #e2e8f0;
 }
@@ -38,7 +37,6 @@ body {
   font-weight: bold;
   margin-bottom: 15px;
   text-align: center;
-  color: #1e3a8a;
 }
 
 .song-refrensi {
@@ -75,7 +73,6 @@ body {
 .lyric-preview {
   display: block;
   font-size: 10px;
-  color: #4b5563;
   margin-top: 2px;
 }
 
