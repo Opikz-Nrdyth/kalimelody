@@ -63,7 +63,7 @@ window.onload = function () {
     }
     dom.title.value = tabData.title || "";
     dom.refrensi.value = tabData.refrensi || "";
-    dom.status.value = tabData.status;
+    dom.status.value = tabData.status || "draf";
     renderNotationGrid();
     updatePreview();
     updateTimestampDisplay(tabData);
@@ -304,6 +304,10 @@ window.onload = function () {
   dom.refrensi.addEventListener("input", (e) => {
     tabData.refrensi = e.target.value;
     updatePreview();
+  });
+
+  dom.status.addEventListener("change", () => {
+    tabData.status = dom.status.value;
   });
 
   dom.linesContainer.addEventListener("focusin", (e) => {
